@@ -1,3 +1,5 @@
+This is an active work in progress, more of a famework but working toward a protocol. 
+
 # Agent Command Structure (ACS)
 
 A substrate-agnostic governance protocol for coordinating fleets of AI agents under human authority. The protocol structures agentic execution into auditable lifecycle phases with explicit human checkpoints, scoped capabilities, and a recoverable failure model. It is derived from the Incident Command System (ICS / NIMS) — the federally mandated coordination framework used across emergency management, hospital incident response, and infrastructure operations for the past fifty years.
