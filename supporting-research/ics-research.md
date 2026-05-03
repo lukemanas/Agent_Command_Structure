@@ -1,7 +1,7 @@
 # ICS (Incident Command System) — Research Report
 ## Mapping to AI Agent Coordination
 
-> Prepared for: fishtank / attend agent coordination design
+> Prepared for: the agent coordination design
 > Date: 2026-02-22
 
 ---
@@ -354,24 +354,24 @@ Every section fully staffed with branches under Operations, multiple shifts, doz
 
 ## 10. Mapping ICS to AI Agent Coordination
 
-This section maps each ICS concept to fishtank/attend patterns.
+This section maps each ICS concept to the protocol's coordination patterns.
 
 ### Events as Containers (ICS: Incidents)
 
 | ICS | Agent Pattern |
 |-----|--------------|
 | Incident | A task/project/investigation — the container for all coordination |
-| Incident name | Project or channel name in fishtank (e.g., `tank`, `datateam`) |
+| Incident name | Project or channel name in the messaging substrate (e.g., `auth-refactor`, `datateam`) |
 | Incident type (1-5) | Complexity level: Type 5 = single agent, Type 1 = full fleet |
 | Incident duration | Task scope: single-session vs multi-day vs ongoing |
 
-**A fishtank "event" is an ICS incident.** It has a defined scope, a defined IC (human), and a beginning and end. Agents don't persist between events — they mobilize and demobilize.
+**A messaging-substrate "event" is an ICS incident.** It has a defined scope, a defined IC (human), and a beginning and end. Agents don't persist between events — they mobilize and demobilize.
 
 ### Incident Commander = Human in the Loop
 
 | ICS | Agent Pattern |
 |-----|--------------|
-| Incident Commander | The human (Rob) or a designated human supervisor |
+| Incident Commander | The human operator or a designated human supervisor |
 | IC sets objectives | Human defines task goals before agents begin |
 | IC approves IAP | Human reviews/approves supervisor's plan before execution |
 | IC is the single authority | All final decisions route to the human; no autonomous consensus |
@@ -405,11 +405,11 @@ A supervisor with 8 active workers is in violation of ICS principles. The fix: a
 
 | ICS | Agent Pattern |
 |-----|--------------|
-| 12-hour operational period | A single Claude Code session (~hours) |
-| Period briefing | Context handoff at session start (CLAUDE.md, clog prime, attend glimpse) |
-| IAP | The task list for this session (clog tasks) |
-| Transfer of command briefing | Session handoff: clog sync, git push, status DM to human |
-| Period documentation | clog log entries, attend narrations, git commits |
+| 12-hour operational period | A single agent session (~hours) |
+| Period briefing | Context handoff at session start (orientation doc, activity-log prime, observation-substrate glimpse) |
+| IAP | The task list for this session (activity-log tasks) |
+| Transfer of command briefing | Session handoff: activity-log sync, git push, status DM to human |
+| Period documentation | activity-log entries, observation-substrate narrations, git commits |
 
 **The end-of-session protocol IS a transfer of command.** It must include: what was accomplished, what changed, resource status (what's still running), outstanding orders, and incident potential (what to expect next session).
 
@@ -417,13 +417,13 @@ A supervisor with 8 active workers is in violation of ICS principles. The fix: a
 
 | ICS Form | Agent Pattern |
 |----------|--------------|
-| ICS-201 (Incident Briefing) | Session start DM: "I'm claude:fab8, assigned to tank, here's my status and plan" |
-| ICS-202 (Objectives) | clog task list shared with human at start of session |
-| ICS-204 (Assignments) | Supervisor DM to worker: "Task: [description]. Report to claude:fab8 when done." |
+| ICS-201 (Incident Briefing) | Session start DM: "I'm worker-1, assigned to project-X, here's my status and plan" |
+| ICS-202 (Objectives) | Activity-log task list shared with human at start of session |
+| ICS-204 (Assignments) | Supervisor DM to worker: "Task: [description]. Report to supervisor-1 when done." |
 | ICS-209 (Status Summary) | Periodic status DM to human: "Here's what's done, what's in progress, what's blocked" |
-| ICS-213 (General Message) | fishtank DM with `tk s source:prefix@user "message"` |
-| ICS-214 (Activity Log) | clog log entries |
-| ICS-211 (Check-in/Check-out) | `tk register` / `tk deregister` hooks |
+| ICS-213 (General Message) | Messaging-substrate DM via the orchestrator CLI to `source:prefix@user` |
+| ICS-214 (Activity Log) | Activity-log entries |
+| ICS-211 (Check-in/Check-out) | Orchestrator CLI register / deregister hooks |
 
 The worker protocol already implements ICS-213 (DM to supervisor when task complete). The gap is ICS-209: periodic status summaries from supervisor to human.
 
@@ -431,11 +431,11 @@ The worker protocol already implements ICS-213 (DM to supervisor when task compl
 
 | ICS Rule | Agent Rule |
 |----------|-----------|
-| Resources report only to their direct supervisor | Worker sends DM to `claude:sup-prefix@user`, not to `@rob` |
+| Resources report only to their direct supervisor | Worker sends DM to its supervisor handle, not to the human handle |
 | Never skip a level | Worker doesn't DM the human directly unless the supervisor is unreachable |
 | Assignments flow down only from direct supervisor | Worker only acts on tasks from its supervisor, not from other workers or other supervisors |
 
-**The current fishtank protocol partially enforces this.** Workers use `claude:fab8@rob` (supervisor session DM), not `@rob` (human DM). The gap: workers sometimes `tk s @rob` directly when they should escalate through the supervisor.
+**A conformant messaging substrate enforces this through addressing conventions.** Workers send to a supervisor session handle, not the human handle. The gap to watch: workers escalating directly to the human when they should route through the supervisor.
 
 ### Unity of Command → Single Supervisor
 
@@ -451,11 +451,11 @@ The worker protocol already implements ICS-213 (DM to supervisor when task compl
 |-----|--------------|
 | "Operations Section Chief" | `--status supervisor` in wait mode |
 | "Worker" (resource) | `--status worker` in wait mode |
-| Standard position titles | Standard `tk wait --status` values |
-| "Incident" | "Event" or "project" in fishtank |
+| Standard position titles | Standard orchestrator CLI `--status` values |
+| "Incident" | "Event" or "project" in the messaging substrate |
 | "Operational period" | "Session" |
 
-The `tk wait --status supervisor/worker` pattern is already implementing ICS terminology. Extend this: `--status planner`, `--status reviewer`, `--status logistics` could map to more specific ICS roles.
+The orchestrator CLI `--status supervisor/worker` pattern already implements ICS terminology. Extend this: `--status planner`, `--status reviewer`, `--status logistics` could map to more specific ICS roles.
 
 ### Modularity → Single-Agent to Fleet
 
@@ -475,14 +475,14 @@ The weakest point in current agent coordination is the **transfer of command**. 
 - Workers may have outstanding tasks with no supervisor to report to
 
 **ICS fix**: Every session end requires a transfer-of-command briefing equivalent, covering:
-1. What was accomplished (done clog tasks)
-2. What is in progress (in_progress clog tasks + who owns them)
+1. What was accomplished (done activity-log tasks)
+2. What is in progress (in_progress activity-log tasks + who owns them)
 3. Resources outstanding (active worker sessions)
 4. Orders placed but not yet filled (tasks dispatched but not confirmed)
 5. Constraints and blockers
 6. Incident potential (expected next steps)
 
-This maps directly to the current session-close protocol: `clog sync`, `git push`, status DM to human. The missing piece: a formal ICS-201-equivalent DM that the next supervisor can read cold.
+This maps directly to the current session-close protocol: activity-log sync, git push, status DM to human. The missing piece: a formal ICS-201-equivalent DM that the next supervisor can read cold.
 
 ---
 

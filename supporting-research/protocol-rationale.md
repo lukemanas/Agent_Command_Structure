@@ -51,7 +51,7 @@ First, **speed.** AI agents are being deployed by individual teams before centra
 
 Second, **the EU AI Act creates a hard deadline.** August 2, 2026 is not "figure it out when you're ready." It's €35M penalties for non-compliance. Enterprises are actively looking for governance tooling right now, not building it themselves.
 
-Third, **the GRC platforms don't understand agents.** ServiceNow, Archer, LogicGate — their AI modules address AI risk at the policy/program level, not at the execution layer. None of them know what to do with operational periods, project containers, or the question "which human authorized which agent to do what, when?" Tank is the execution layer these platforms would need to integrate with, not compete against.
+Third, **the GRC platforms don't understand agents.** ServiceNow, Archer, LogicGate — their AI modules address AI risk at the policy/program level, not at the execution layer. None of them know what to do with operational periods, project containers, or the question "which human authorized which agent to do what, when?" The protocol is the execution layer these platforms would need to integrate with, not compete against.
 
 ---
 
@@ -133,13 +133,13 @@ Through late 2025 and early 2026, Anthropic has been building the enterprise AI 
 
 Despite this, the operational governance layer is absent:
 
-1. **No inter-agent communication protocol across sessions or machines.** Agent teams in Claude Code coordinate within a single context. There is no structured messaging layer for agents across sessions, machines, or model families — no persistent mailboxes, no scoped channels, no session addressing. Tank is that layer.
+1. **No inter-agent communication protocol across sessions or machines.** Agent teams in Claude Code coordinate within a single context. There is no structured messaging layer for agents across sessions, machines, or model families — no persistent mailboxes, no scoped channels, no session addressing. The messaging substrate this protocol assumes is that layer.
 
 2. **No lifecycle-phased governance layer.** Anthropic has model-level safety (ASL tiers) and task-level coordination (Agent Skills). There is no governance at the deployment level: no project containers, no lifecycle phases, no OAPs with human checkpoints, no structured handoffs. The gap between "Claude is safe" and "Claude is deployable in production at organizational scale" is wide.
 
 3. **Skill governance is undefined.** The New Stack noted: "Organizations will need to establish clear processes for auditing, testing, and deploying skills from trusted sources. There will be a need for skill registries to manage the discovery and distribution of skills, and policy engines to control which agents can use which skills." Anthropic published the open standard. The governance tooling is unaddressed. ([The New Stack](https://thenewstack.io/agent-skills-anthropics-next-bid-to-define-ai-standards/))
 
-4. **No multi-model governance.** Anthropic's tooling governs Claude agents. Enterprises deploying Claude, GPT, and Gemini side-by-side have no shared governance layer. Tank is model-agnostic by design. This is not a hypothetical: HP, Intuit, Oracle, and State Farm — Frontier's own early customers — all have existing relationships with Google, Microsoft, and Anthropic. Their enterprise agent fleets will not be GPT-only. The governance layer for those fleets cannot be Frontier; it's OpenAI's platform. It needs to be a neutral standard.
+4. **No multi-model governance.** Anthropic's tooling governs Claude agents. Enterprises deploying Claude, GPT, and Gemini side-by-side have no shared governance layer. The protocol is model-agnostic by design. This is not a hypothetical: HP, Intuit, Oracle, and State Farm — Frontier's own early customers — all have existing relationships with Google, Microsoft, and Anthropic. Their enterprise agent fleets will not be GPT-only. The governance layer for those fleets cannot be Frontier; it's OpenAI's platform. It needs to be a neutral standard.
 
 ### The MCP Playbook
 
@@ -184,6 +184,8 @@ The pitch is not "vendor X should use this instead of building their own." The p
 ### The Project Container
 
 The core architectural primitive is the **project**: a container with a VCS repo attached. This is the enforcement boundary. Agents run inside project containers — they cannot access host credentials, host filesystem, or resources outside their container. Everything an agent can do is determined by what is mounted into its container. (Reference implementations: Docker, Podman, microVMs.)
+
+
 
 This is not a speculative deployment model. All three major agent runtimes already support containerized execution: Anthropic publishes official devcontainers and Docker provides Claude Code sandboxes ([Docker docs](https://docs.docker.com/ai/sandboxes/agents/claude-code/)); OpenAI's Codex runs natively in isolated cloud containers with network-disabled agent phases ([OpenAI docs](https://developers.openai.com/codex/concepts/sandboxing)); Google publishes Gemini CLI sandbox images with microVM-backed isolation ([Gemini CLI](https://github.com/google-gemini/gemini-cli)). The governance architecture aligns with the direction all three vendors are already moving.
 
@@ -247,7 +249,7 @@ Workers → supervisors → CoS → human. No bypassing. Each level attempts res
 ### Checkin Gate
 
 Every agent must prove orientation before starting work. Two-level validation:
-1. **Tank validates mechanical fields** — role, objective IDs, period state, risk tier. Hard enforcement — no credentials without passing.
+1. **The orchestrator validates mechanical fields** — role, objective IDs, period state, risk tier. Hard enforcement — no credentials without passing.
 2. **CoS validates comprehension** — agent restates its assignment. Soft enforcement — CoS can reject and respawn.
 
 No agent bypasses this gate. The gate catches: skill didn't load, hallucinated assignment, stale state.
@@ -283,11 +285,11 @@ Three forces are converging:
 
 *The "too early" version:* Enterprises are still in POC phase. Only 23% are scaling. The mass deployment of agent fleets where governance really bites is 2-3 years away. Building governance infrastructure for a problem enterprises don't yet have at scale is premature.
 
-*The "too late" version:* The governance conversation has already started. ISO 42001 was certified in 2023. NIST AI RMF shipped January 2023. Every major consulting firm has an AI governance practice. Anthropic, Google, and Microsoft all have governance narratives. The standards are already being written; Tank is late to that table.
+*The "too late" version:* The governance conversation has already started. ISO 42001 was certified in 2023. NIST AI RMF shipped January 2023. Every major consulting firm has an AI governance practice. Anthropic, Google, and Microsoft all have governance narratives. The standards are already being written; this protocol is late to that table.
 
 **Response to "too early":** Standards must precede mass adoption to work. HTTP, TCP/IP, and XML were all defined before the applications that depended on them existed at scale. MCP was published in November 2024 — before 97M monthly SDK downloads required it. The moment to establish a governance protocol is before enterprise architectural decisions calcify around Frontier's closed model or before 10 incompatible frameworks fragment the market. Governance adopted reactively — after incidents, after regulatory fines — is always harder and more expensive than governance built in.
 
-**Response to "too late":** The existing governance frameworks (ISO 42001, NIST AI RMF) are management-level standards — they describe what a QMS looks like, not how to implement it technically for agent fleets. None of them specify project containers, operational period mechanics, or chain-of-command procedures. They are the *requirements*; Tank is the *implementation*. Being late to the standards conversation does not mean being late to the implementation conversation. That conversation is just beginning.
+**Response to "too late":** The existing governance frameworks (ISO 42001, NIST AI RMF) are management-level standards — they describe what a QMS looks like, not how to implement it technically for agent fleets. None of them specify project containers, operational period mechanics, or chain-of-command procedures. They are the *requirements*; this protocol is the *implementation*. Being late to the standards conversation does not mean being late to the implementation conversation. That conversation is just beginning.
 
 ---
 

@@ -1,6 +1,6 @@
 # Governance Protocol Plan
 
-> Working plan from a planning session on March 28, 2026. Carried over and substrate-scrubbed for forward use as a protocol spec independent of the original Tank reference implementation.
+> Working plan from a planning session on March 28, 2026. Carried over and substrate-scrubbed for forward use as a protocol spec independent of the original reference implementation.
 
 ---
 

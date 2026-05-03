@@ -227,7 +227,7 @@ Agent passes the checkin gate (orientation validated before work begins).
   "actor": { "agent_id": "worker-1", "role": "worker", "human": "luke" },
   "detail": {
     "validated_fields": ["role", "objective_ids", "period_state", "risk_tier", "supervisor"],
-    "validator": "tank"
+    "validator": "orchestrator"
   }
 }
 ```
@@ -433,7 +433,7 @@ Credentials mounted into project container from vault.
   "event_type": "credential.issued",
   "detail": {
     "credential_type": "github_token",
-    "scope": "tankernauts/auth-service:write",
+    "scope": "acme-corp/auth-service:write",
     "expires_at": "2026-03-30T18:30:00Z",
     "issued_to": "project-container:auth-refactor-001"
   }

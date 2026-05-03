@@ -8,7 +8,7 @@
 >
 > Last updated: February 23, 2026 (substrate-scrubbed April 2026 for the protocol carryover).
 >
-> **Note on substrate references in the "Tank Mechanism" column:** the original document was written against a specific reference implementation (Tank: Redis transport, attend daemon, fishtank streams, clog logs, `ft:sessions` registry). Where a cell still names those components, read them as "the protocol's reference-implementation equivalent." A substrate-neutral version of this table is on the carryover roadmap; this scrub generalizes the headline framing only.
+> **Note on the "Protocol Mechanism" column:** the column describes how the protocol — and a conformant reference implementation — addresses each control. Where a cell names a concrete component (e.g., observation substrate, activity log, messaging substrate, session registry), read it as a reference-implementation example of the protocol-level mechanism, not as a mandated substrate.
 
 ---
 
@@ -32,17 +32,17 @@ Primary source: [EU AI Act full text](https://artificialintelligenceact.eu/)
 
 | Article | Control Text | Protocol Mechanism | Coverage | Relevance |
 |---------|-------------|----------------|----------|-----------|
-| **Art. 9 — Risk Management** | "Providers shall establish, implement, document and maintain a risk management system…as a continuous iterative process run throughout the entire lifecycle." The system must identify and analyze risks, estimate their magnitude, and adopt targeted mitigation measures. ([Art. 9](https://artificialintelligenceact.eu/article/9/)) | Operational period checkpoints create bounded risk windows; risk-tiered model selection (critical/high/moderate/low cadences) scales review frequency to risk level; attend narration provides continuous monitoring | ✅ | 🔴 |
-| **Art. 10 — Data Governance** | Training, validation, and testing data must be relevant, representative, and free of errors "to the best extent possible." Documented data governance practices required including design choices, collection methods, and bias examination. ([Art. 10](https://artificialintelligenceact.eu/article/10/)) | Session-scoped data access prevents cross-contamination; AES-256-GCM encrypted comms protect data in transit; fishtank message stream provides data access audit trail. NOTE: Tank does not govern training data — this requirement primarily applies to model providers. | ⚠️ Partial — applies at model layer | 🟡 |
+| **Art. 9 — Risk Management** | "Providers shall establish, implement, document and maintain a risk management system…as a continuous iterative process run throughout the entire lifecycle." The system must identify and analyze risks, estimate their magnitude, and adopt targeted mitigation measures. ([Art. 9](https://artificialintelligenceact.eu/article/9/)) | Operational period checkpoints create bounded risk windows; risk-tiered model selection (critical/high/moderate/low cadences) scales review frequency to risk level; the observation substrate provides continuous monitoring | ✅ | 🔴 |
+| **Art. 10 — Data Governance** | Training, validation, and testing data must be relevant, representative, and free of errors "to the best extent possible." Documented data governance practices required including design choices, collection methods, and bias examination. ([Art. 10](https://artificialintelligenceact.eu/article/10/)) | Session-scoped data access prevents cross-contamination; authenticated encryption on inter-agent traffic protects data in transit; the messaging substrate provides a data access audit trail. NOTE: the protocol does not govern training data — this requirement primarily applies to model providers. | ⚠️ Partial — applies at model layer | 🟡 |
 | **Art. 11 — Technical Documentation** | Technical documentation must be drawn up before the system is placed into service and kept up to date. Must contain: general description, development process, components, monitoring/control procedures, validation results, and descriptions of any post-conformity changes. ([Art. 11](https://artificialintelligenceact.eu/article/11/), [Annex IV](https://artificialintelligenceact.eu/annex/4/)) | Transfer of Command briefings (ICS-201 equivalent) document current state, objectives, resources, and constraints at each session handoff; operational period IAP records; session metadata (project, role, model, scope) | ✅ | 🔴 |
-| **Art. 12 — Record-Keeping** | High-risk AI systems must have automatic logging capabilities built in that record events relevant to identifying risk scenarios and supporting oversight. Logs must have timestamps. For remote biometric identification, additional fields required. ([Art. 12](https://artificialintelligenceact.eu/article/12/)) | attend narrations (timestamped, cross-machine) + clog task logs (per-task history) + fishtank message streams (append-only Redis) + human IC approvals in persistent DM trail. All records are append-only and include timestamps. | ✅ | 🔴 |
-| **Art. 13 — Transparency** | Systems must be sufficiently transparent that deployers can interpret outputs and use them appropriately. Instructions for use must include: accuracy metrics, robustness levels, foreseeable risks, guidance on human oversight, and description of logging mechanisms. ([Art. 13](https://artificialintelligenceact.eu/article/13/)) | Session registry (`ft:sessions`) makes agent identity explicit; `source:prefix@user` addressing makes source type visible; attend narration is human-readable interpretation layer. No formal capability card format per agent type exists yet. | ⚠️ Partial — registry and addressing present; capability card format not standardized | 🔴 |
+| **Art. 12 — Record-Keeping** | High-risk AI systems must have automatic logging capabilities built in that record events relevant to identifying risk scenarios and supporting oversight. Logs must have timestamps. For remote biometric identification, additional fields required. ([Art. 12](https://artificialintelligenceact.eu/article/12/)) | Observation-substrate narrations (timestamped, cross-machine) + activity-log task entries (per-task history) + messaging-substrate streams (append-only) + human IC approvals in persistent DM trail. All records are append-only and include timestamps. | ✅ | 🔴 |
+| **Art. 13 — Transparency** | Systems must be sufficiently transparent that deployers can interpret outputs and use them appropriately. Instructions for use must include: accuracy metrics, robustness levels, foreseeable risks, guidance on human oversight, and description of logging mechanisms. ([Art. 13](https://artificialintelligenceact.eu/article/13/)) | Session registry makes agent identity explicit; `source:prefix@user` addressing makes source type visible; the observation substrate is the human-readable interpretation layer. No formal capability card format per agent type exists yet. | ⚠️ Partial — registry and addressing present; capability card format not standardized | 🔴 |
 | **Art. 14 — Human Oversight** | Systems must be designed so natural persons can "decide, in any particular situation, not to use the system or to disregard, override or reverse" AI output. Humans must be able to interrupt via a "stop button or equivalent." Must address automation bias. ([Art. 14](https://artificialintelligenceact.eu/article/14/)) | Human IC at top of every command hierarchy; Safety Officer role has independent halt authority; stop hooks as interrupt mechanism; kill switch per session; no action proceeds past checkpoint without human approval | ✅ | 🔴 |
 | **Art. 15 — Accuracy & Robustness** | Systems must achieve appropriate accuracy, robustness, and cybersecurity. Resilient to errors, faults, and inconsistencies in inputs. Resilient to adversarial inputs. Fallback plans documented. ([Art. 15](https://artificialintelligenceact.eu/article/15/)) | Rollback to last checkpoint commit; test suite required at every operational period boundary; structured failure reporting up chain of command. No adversarial input (prompt injection) testing framework built in. | ⚠️ Partial — rollback and testing strong; adversarial input testing absent | 🔴 |
-| **Art. 17 — Quality Management System** | Providers must implement a documented QMS covering: regulatory strategy, design/QA procedures, data management, risk management, incident reporting, supplier management, and communication procedures. Named person responsible for QMS. ([Art. 17](https://artificialintelligenceact.eu/article/17/)) | Tank provides the operational governance layer (checkpoints, chain of command, audit trail) that a QMS would reference. Tank does NOT constitute a complete QMS — no formal AI policy document, no supplier management framework, no QMS review cadence generated | ⚠️ Partial — operational controls map well; formal QMS shell is enterprise responsibility | 🟡 |
-| **Art. 19 — Log Retention** | Providers of high-risk AI systems must retain automatically generated logs for minimum **6 months** unless other law requires longer. Financial institutions must integrate logs into existing compliance documentation. ([Art. 19](https://artificialintelligenceact.eu/article/19/)) | Logs exist across attend/clog/fishtank/git. No enforced 6-month minimum retention policy; no archival tier separate from operational Redis streams. | ❌ Gap | 🔴 |
+| **Art. 17 — Quality Management System** | Providers must implement a documented QMS covering: regulatory strategy, design/QA procedures, data management, risk management, incident reporting, supplier management, and communication procedures. Named person responsible for QMS. ([Art. 17](https://artificialintelligenceact.eu/article/17/)) | The protocol provides the operational governance layer (checkpoints, chain of command, audit trail) that a QMS would reference. The protocol does NOT constitute a complete QMS — no formal AI policy document, no supplier management framework, no QMS review cadence generated | ⚠️ Partial — operational controls map well; formal QMS shell is enterprise responsibility | 🟡 |
+| **Art. 19 — Log Retention** | Providers of high-risk AI systems must retain automatically generated logs for minimum **6 months** unless other law requires longer. Financial institutions must integrate logs into existing compliance documentation. ([Art. 19](https://artificialintelligenceact.eu/article/19/)) | Logs exist across the observation substrate, activity log, messaging substrate, and git. No enforced 6-month minimum retention policy; no archival tier separate from operational streams. | ❌ Gap | 🔴 |
 | **Annex III — System Inventory** | Operators must maintain an inventory of high-risk AI systems and classify them according to Annex III criteria before deployment. | No built-in AI system classification or pre-deployment registration mechanism | ❌ Gap | 🟡 |
-| **Art. 9 — External Incident Reporting** | Incidents and near-misses must be reported to relevant competent national authorities. ([Art. 73](https://artificialintelligenceact.eu/article/73/)) | Internal incident trail (clog + attend) is comprehensive. No pipeline to external authorities (regulatory bodies, SIEM export). | ❌ Gap | 🟡 |
+| **Art. 9 — External Incident Reporting** | Incidents and near-misses must be reported to relevant competent national authorities. ([Art. 73](https://artificialintelligenceact.eu/article/73/)) | Internal incident trail (activity log + observation substrate) is comprehensive. No pipeline to external authorities (regulatory bodies, SIEM export). | ❌ Gap | 🟡 |
 
 ---
 
@@ -58,13 +58,13 @@ Primary sources: [NIST AI RMF 1.0 (PDF)](https://nvlpubs.nist.gov/nistpubs/ai/ni
 |--------|-------------|----------------|----------|-----------|
 | **GV-1.1** | Legal and regulatory requirements involving AI are understood, managed, and documented | No built-in regulatory requirements registry or compliance mapping | ❌ Gap | 🟡 |
 | **GV-1.4** | Organizational teams document policies, processes, and procedures for AI risk management throughout the AI lifecycle | Operational period lifecycle: plan → execute → checkpoint → review → next period; chain of command protocol | ✅ | 🔴 |
-| **GV-1.6** | Mechanisms are in place to inventory AI systems | Session registry (`ft:sessions`) tracks active sessions; not a full pre-deployment AI system inventory | ⚠️ Partial | 🔴 |
-| **GV-1.7** | Processes and procedures are in place for decommissioning and phasing out AI systems | session_end.sh deregisters from `ft:sessions`; Redis TTLs expire streams; no formal credential revocation confirmation | ⚠️ Partial | 🔴 |
+| **GV-1.6** | Mechanisms are in place to inventory AI systems | Session registry tracks active sessions; not a full pre-deployment AI system inventory | ⚠️ Partial | 🔴 |
+| **GV-1.7** | Processes and procedures are in place for decommissioning and phasing out AI systems | Session-end hook deregisters from the session registry; messaging-substrate TTLs expire streams; no formal credential revocation confirmation | ⚠️ Partial | 🔴 |
 | **GV-2.1** | Roles and responsibilities for risk management are established, communicated, and documented | ICS role hierarchy (IC → Supervisor → Worker); session registry with user owner; chain of command addressing | ✅ | 🔴 |
 | **GV-2.2** | Personnel with AI risk management responsibilities have appropriate training and skills | Out of scope — human training compliance | 🚫 | ⚪ |
 | **GV-3.2** | AI risk and impact metrics are documented for each specific AI system (human-AI role definitions) | Chain of command defines which decisions agents make autonomously vs. which require human approval; operational period checkpoints are the formal human approval boundary | ✅ | 🔴 |
 | **GV-6.1** | Policies and procedures are in place for third-party entities including AI developers, vendors | No vendor risk management framework; LLM API provider risk not assessed | ❌ Gap | 🟡 |
-| **GV-6.2** | Contingency processes for failures of third-party entities (e.g., model API unavailable) | Wait mode known-broken on Redis idle connection drops (tracked as GitHub issue #18); no model provider failover built in | ❌ Gap | 🔴 |
+| **GV-6.2** | Contingency processes for failures of third-party entities (e.g., model API unavailable) | Messaging-substrate idle-connection drops are a known reliability gap in the reference implementation; no model provider failover built in | ❌ Gap | 🔴 |
 
 ### MAP
 
@@ -80,11 +80,11 @@ Primary sources: [NIST AI RMF 1.0 (PDF)](https://nvlpubs.nist.gov/nistpubs/ai/ni
 
 | Sub-ID | Control Text | Protocol Mechanism | Coverage | Relevance |
 |--------|-------------|----------------|----------|-----------|
-| **Measure-2.4** | The functionality and behavior of the AI system and its components are monitored and evaluated in production | attend daemon monitors session activity; clog tracks task completion; no structured metrics dashboard or defined KPIs | ⚠️ Partial | 🔴 |
+| **Measure-2.4** | The functionality and behavior of the AI system and its components are monitored and evaluated in production | Observation substrate monitors session activity; activity log tracks task completion; no structured metrics dashboard or defined KPIs | ⚠️ Partial | 🔴 |
 | **Measure-2.5** | AI system validity and reliability are demonstrated; regression tests with held-out benchmarks | Test suite required at every operational period checkpoint; no held-out benchmark set defined in protocol | ⚠️ Partial | 🔴 |
 | **Measure-2.7** | AI system security and resilience evaluated; adversarial inputs (prompt injection) tested regularly | No adversarial input testing framework; prompt injection is a known gap for agent systems | ❌ Gap | 🔴 |
-| **Measure-2.8** | Transparency and accountability risks examined; AI outputs must be interpretable by human reviewers | Chain of command ensures human-interpretable status reports at every checkpoint; attend narration is human-readable | ✅ | 🔴 |
-| **Measure-3.1** | Approaches to identify existing and emergent risks are in place; anomaly detection on agent behavior | attend monitors sessions; no automated behavioral anomaly detection or statistical baseline | ⚠️ Partial | 🔴 |
+| **Measure-2.8** | Transparency and accountability risks examined; AI outputs must be interpretable by human reviewers | Chain of command ensures human-interpretable status reports at every checkpoint; observation-substrate narration is human-readable | ✅ | 🔴 |
+| **Measure-3.1** | Approaches to identify existing and emergent risks are in place; anomaly detection on agent behavior | Observation substrate monitors sessions; no automated behavioral anomaly detection or statistical baseline | ⚠️ Partial | 🔴 |
 | **Measure-3.3** | Feedback mechanisms for end users to report incorrect or harmful AI outputs exist | Human IC reviews at every checkpoint; no structured end-user feedback mechanism | ⚠️ Partial | 🟡 |
 | **Measure-4.3** | Performance is tracked over time; alert on statistically significant degradation | No performance trend tracking or degradation alerting | ❌ Gap | 🟡 |
 
@@ -97,7 +97,7 @@ Primary sources: [NIST AI RMF 1.0 (PDF)](https://nvlpubs.nist.gov/nistpubs/ai/ni
 | **Manage-1.4** | Residual risks are documented and accepted by a named authority | No formal residual risk acceptance documentation | ❌ Gap | 🟡 |
 | **Manage-2.4** | Automated circuit breakers exist to suspend AI systems when error rate exceeds threshold | No automated agent suspension on error threshold | ❌ Gap | 🔴 |
 | **Manage-3.1** | Third-party AI resources are monitored; model API providers tracked for deprecations and security advisories | No model provider monitoring | ❌ Gap | 🟡 |
-| **Manage-4.3** | Incidents communicated and tracked; central incident log with reportable AI incident definition | clog task history + attend narration trail; no central incident registry with defined reportable event criteria | ⚠️ Partial | 🔴 |
+| **Manage-4.3** | Incidents communicated and tracked; central incident log with reportable AI incident definition | Activity-log task history + observation-substrate narration trail; no central incident registry with defined reportable event criteria | ⚠️ Partial | 🔴 |
 
 ---
 
@@ -113,7 +113,7 @@ Primary sources: [NIST CSF 2.0 (PDF)](https://nvlpubs.nist.gov/nistpubs/CSWP/NIS
 |--------|-------------|----------------|----------|-----------|
 | **GV.OC-03** | Legal, regulatory, and contractual requirements regarding cybersecurity — including privacy and civil liberties — are understood and managed | No regulatory requirements register | ❌ Gap | 🟡 |
 | **GV.RM-02** | Risk tolerance for the organization is established, communicated, and updated | Operational period risk tiers imply tolerance levels; not formally documented | ⚠️ Partial | 🟡 |
-| **GV.RR-02** | Roles, responsibilities, and authorities related to cybersecurity risk management are established and communicated; every system has a named human owner | ICS role hierarchy; session registry; `@user` owner on every session | ✅ | 🔴 |
+| **GV.RR-02** | Roles, responsibilities, and authorities related to cybersecurity risk management are established and communicated; every system has a named human owner | ICS role hierarchy; session registry; named human owner on every session | ✅ | 🔴 |
 | **GV.SC-01** | A cybersecurity supply chain risk management program is established, authenticated, and approved | No supply chain risk program for AI model or framework vendors | ❌ Gap | 🟡 |
 | **GV.SC-07** | Suppliers and third-party partner cybersecurity risks are continuously monitored | No vendor monitoring (model API changes, framework CVEs, incidents) | ❌ Gap | 🟡 |
 
@@ -121,7 +121,7 @@ Primary sources: [NIST CSF 2.0 (PDF)](https://nvlpubs.nist.gov/nistpubs/CSWP/NIS
 
 | Sub-ID | Control Text | Protocol Mechanism | Coverage | Relevance |
 |--------|-------------|----------------|----------|-----------|
-| **ID.AM-02** | Inventories of software, services, and systems are maintained; each agent registered with version, model, tools, owner | Active session registry (`ft:sessions`) exists; no version-pinned inventory or pre-deployment registration | ⚠️ Partial | 🔴 |
+| **ID.AM-02** | Inventories of software, services, and systems are maintained; each agent registered with version, model, tools, owner | Active session registry exists; no version-pinned inventory or pre-deployment registration | ⚠️ Partial | 🔴 |
 | **ID.AM-04** | External information systems and catalogs impacting the organization are catalogued | No external API inventory per agent type | ❌ Gap | 🟡 |
 | **ID.AM-05** | Assets are prioritized based on classification, criticality, resources, and impact on mission | Risk tiers (critical/high/moderate/low) provide proportional controls; no formal data sensitivity classification | ⚠️ Partial | 🔴 |
 | **ID.RA-01** | Vulnerabilities in assets are identified, validated, and recorded | No CVE or vulnerability tracking for agent framework dependencies | ❌ Gap | 🟡 |
@@ -130,10 +130,10 @@ Primary sources: [NIST CSF 2.0 (PDF)](https://nvlpubs.nist.gov/nistpubs/CSWP/NIS
 
 | Sub-ID | Control Text | Protocol Mechanism | Coverage | Relevance |
 |--------|-------------|----------------|----------|-----------|
-| **PR.AA-01** | Identities and credentials for authorized users, services, and hardware are managed, authenticated, and periodically reviewed | `source:prefix@user` session addressing; `ft:users` registry; no credential rotation schedule enforced | ⚠️ Partial | 🔴 |
+| **PR.AA-01** | Identities and credentials for authorized users, services, and hardware are managed, authenticated, and periodically reviewed | `source:prefix@user` session addressing; user registry; no credential rotation schedule enforced | ⚠️ Partial | 🔴 |
 | **PR.AA-05** | Access permissions, entitlements, and authorizations are defined in a policy, managed, enforced, and reviewed | Session-scoped DMs enforce least privilege; workers cannot access other sessions' channels by protocol design | ✅ | 🔴 |
-| **PR.DS-01** | The confidentiality, integrity, and availability of data-at-rest are protected | AES-256-GCM on message content; git history encrypted at OS level (enterprise responsibility) | ✅ | 🔴 |
-| **PR.DS-02** | The confidentiality, integrity, and availability of data-in-transit are protected | TLS on Redis transport + AES-256-GCM on content (defense in depth) | ✅ | 🔴 |
+| **PR.DS-01** | The confidentiality, integrity, and availability of data-at-rest are protected | Authenticated encryption on message content; git history encrypted at OS level (enterprise responsibility) | ✅ | 🔴 |
+| **PR.DS-02** | The confidentiality, integrity, and availability of data-in-transit are protected | TLS on the messaging substrate transport + authenticated content encryption (defense in depth) | ✅ | 🔴 |
 | **PR.PS-01** | Configuration management practices are established and applied | No formal configuration management for agent system prompts, model versions, tool permissions | ❌ Gap | 🔴 |
 | **PR.PS-03** | Configuration change requests are reviewed, approved, and tracked | No change log for agent configuration changes | ❌ Gap | 🔴 |
 
@@ -141,7 +141,7 @@ Primary sources: [NIST CSF 2.0 (PDF)](https://nvlpubs.nist.gov/nistpubs/CSWP/NIS
 
 | Sub-ID | Control Text | Protocol Mechanism | Coverage | Relevance |
 |--------|-------------|----------------|----------|-----------|
-| **DE.CM-03** | Personnel activity and technology usage are monitored to find potentially adverse events | clog task history; attend narration captures agent activity; no automated alerting thresholds | ⚠️ Partial | 🔴 |
+| **DE.CM-03** | Personnel activity and technology usage are monitored to find potentially adverse events | Activity-log task history; observation-substrate narration captures agent activity; no automated alerting thresholds | ⚠️ Partial | 🔴 |
 | **DE.AE-01** | A baseline of network operations and expected data flows for users and systems is established and managed; anomalous activity is detected | No automated behavioral baselines or statistical deviation alerting | ❌ Gap | 🔴 |
 | **DE.AE-02** | Potentially adverse events are analyzed to better characterize them | No automated anomaly classification pipeline | ❌ Gap | 🟡 |
 
@@ -150,7 +150,7 @@ Primary sources: [NIST CSF 2.0 (PDF)](https://nvlpubs.nist.gov/nistpubs/CSWP/NIS
 | Sub-ID | Control Text | Protocol Mechanism | Coverage | Relevance |
 |--------|-------------|----------------|----------|-----------|
 | **RS.MA-01** | The incident response plan is executed in coordination with relevant third parties as required | No notification pipeline to model providers or external authorities | ❌ Gap | 🟡 |
-| **RS.AN-01** | Incidents are investigated to determine contributing factors and their impact | Full trail: git commits + attend narrations + clog + fishtank DM history; sufficient to reconstruct agent decision chain | ✅ | 🔴 |
+| **RS.AN-01** | Incidents are investigated to determine contributing factors and their impact | Full trail: git commits + observation-substrate narrations + activity log + messaging-substrate DM history; sufficient to reconstruct agent decision chain | ✅ | 🔴 |
 | **RC.RM-02** | Recovery activities restore normal operations; rollback to previous stable configuration is documented | Standardized commits create known-good states; rollback procedure documented in governance.md | ✅ | 🔴 |
 
 ---
@@ -168,10 +168,10 @@ Primary sources: [ISO 42001 Overview](https://www.iso.org/standard/42001), [ISMS
 | **4.3** | Determine the scope of the AI management system; out-of-scope systems explicitly excluded with rationale | Session registry defines in-scope agents; no formal out-of-scope exclusion rationale | ⚠️ Partial | 🟡 |
 | **5.2** | Top management must establish and maintain an AI policy; formal document signed by executive leadership | Human IC is structurally required; no organizational AI policy document is generated by the protocol | ❌ Gap | ⚪ |
 | **6.1.2** | Conduct AI-specific risk assessments (bias, opacity, autonomy, model drift) — not generic IT risk | Risk-tiered operational periods; no AI-specific risk taxonomy or assessment methodology built in | ⚠️ Partial | 🟡 |
-| **6.1.3** | Select controls from Annex A for each identified risk; document rationale for omitted controls | Tank addresses many Annex A controls operationally; no formal control selection audit trail | ⚠️ Partial | 🟡 |
+| **6.1.3** | Select controls from Annex A for each identified risk; document rationale for omitted controls | The protocol addresses many Annex A controls operationally; no formal control selection audit trail | ⚠️ Partial | 🟡 |
 | **8.1** | Controls must be operationally deployed, not just documented in a policy | Stop hooks, chain of command, checkpoints, encrypted messaging — all enforced at the protocol level, not aspirationally | ✅ | 🔴 |
-| **8.4** | Maintain AI incident response procedures specific to AI (not just generic IT incident response) | clog + attend trail; rollback procedure; chain of command escalation — all AI-specific, not adapted from IT | ✅ | 🔴 |
-| **9.1** | Monitor and measure AI system performance; KPIs defined; measured on schedule; results documented | attend collects activity data; clog tracks task completion; no structured KPI framework or measurement schedule | ⚠️ Partial | 🔴 |
+| **8.4** | Maintain AI incident response procedures specific to AI (not just generic IT incident response) | activity log + observation-substrate trail; rollback procedure; chain of command escalation — all AI-specific, not adapted from IT | ✅ | 🔴 |
+| **9.1** | Monitor and measure AI system performance; KPIs defined; measured on schedule; results documented | observation substrate collects activity data; activity log tracks task completion; no structured KPI framework or measurement schedule | ⚠️ Partial | 🔴 |
 | **9.2** | Conduct internal audits of the AIMS itself (the governance system, not just agent performance) | No AIMS-level audit mechanism | ❌ Gap | 🟡 |
 | **10.1** | Nonconformities must be corrected with documented corrective actions (not just rollback) | Checkpoint failures trigger rollback; no formal corrective action tracking | ⚠️ Partial | 🟡 |
 
@@ -186,10 +186,10 @@ Primary sources: [ISO 42001 Overview](https://www.iso.org/standard/42001), [ISMS
 | **A.5.2** | Implement a structured methodology to evaluate AI externalities and impacts | Operational period blast radius bounding; no formal externality assessment methodology | ⚠️ Partial | 🟡 |
 | **A.5.4** | Evaluate how AI decisions affect specific populations or groups (disparate impact) | No demographic impact assessment built in | ❌ Gap | ⚪ |
 | **A.6.2.5** | Implement controlled procedures for deploying AI systems into production | Human IC approval gates at operational period boundaries; stop hooks enforce change control | ✅ | 🔴 |
-| **A.6.2.6** | Implement ongoing surveillance and performance tracking in production | attend daemon + clog; no structured performance tracking dashboard | ⚠️ Partial | 🔴 |
-| **A.6.2.7** | Maintain comprehensive technical records supporting auditability | Transfer of Command briefings; git history; attend logs; operational period IAPs | ✅ | 🔴 |
-| **A.6.2.8** | Record event logs documenting AI system activities and decisions | attend narrations + clog task logs + fishtank streams (all timestamped, append-only) | ✅ | 🔴 |
-| **A.7.2–A.7.6** | Document and manage datasets; data lineage; bias testing; processing procedures | Tank is a governance protocol; dataset governance applies to model training, not agent communication | 🚫 Out of scope | ⚪ |
+| **A.6.2.6** | Implement ongoing surveillance and performance tracking in production | observation substrate + activity log; no structured performance tracking dashboard | ⚠️ Partial | 🔴 |
+| **A.6.2.7** | Maintain comprehensive technical records supporting auditability | Transfer of Command briefings; git history; observation-substrate logs; operational period IAPs | ✅ | 🔴 |
+| **A.6.2.8** | Record event logs documenting AI system activities and decisions | observation-substrate narrations + activity-log task entries + messaging-substrate streams (all timestamped, append-only) | ✅ | 🔴 |
+| **A.7.2–A.7.6** | Document and manage datasets; data lineage; bias testing; processing procedures | the protocol is a governance protocol; dataset governance applies to model training, not agent communication | 🚫 Out of scope | ⚪ |
 | **A.8.2** | Provide materials explaining system functionality and limitations to end users | Session metadata partially addresses; no formal capability card standard | ⚠️ Partial | 🔴 |
 | **A.8.4** | Establish procedures for notifying stakeholders of AI failures | Chain of command escalation routes failures to IC; no external stakeholder notification mechanism | ⚠️ Partial | 🟡 |
 | **A.9.2** | Implement safeguards and guidelines preventing misuse in operational contexts | Scoped session DMs; encrypted comms; session addressing prevents spoofing | ✅ | 🔴 |
@@ -199,7 +199,7 @@ Primary sources: [ISO 42001 Overview](https://www.iso.org/standard/42001), [ISMS
 
 ## 5. ISO/IEC 27001:2022 (Information Security Management)
 
-*93 controls across four categories. Organizational (A.5) and technological (A.8) controls most relevant to Tank.*
+*93 controls across four categories. Organizational (A.5) and technological (A.8) controls most relevant to this protocol.*
 
 Primary sources: [ISO 27001 Annex A Overview — DataGuard](https://www.dataguard.com/iso-27001/annex-a/), [A.5.15 Access Control — ISMS.online](https://www.isms.online/iso-27001/annex-a-2022/5-15-access-control-2022/), [A.5.16 Identity Management — ISMS.online](https://www.isms.online/iso-27001/annex-a-2022/5-16-identity-management-2022/)
 
@@ -212,15 +212,15 @@ Primary sources: [ISO 27001 Annex A Overview — DataGuard](https://www.dataguar
 | **A.5.17** | Authentication Credentials | Rules for allocation and management of authentication credentials; rotation | TLS + AES-256-GCM; no credential rotation enforcement for session tokens | ⚠️ Partial | 🔴 |
 | **A.5.18** | Access Rights Review | Access rights periodically reviewed and modified/revoked when no longer needed | No periodic access rights review for agent sessions | ❌ Gap | 🟡 |
 | **A.5.19** | Supplier Information Security | Information security requirements defined for supplier relationships | No supplier security requirements for LLM providers or framework vendors | ❌ Gap | 🟡 |
-| **A.5.24** | Incident Management Planning | Roles, responsibilities, and procedures for information security incident management | clog incident trail; rollback procedure; chain of command escalation; human IC has halt authority | ✅ | 🔴 |
-| **A.5.28** | Collection of Evidence | Evidence for incidents maintained and preserved | Full trail (git + attend + clog + fishtank) preserved; no explicit forensic preservation policy (evidence isolated from operational modification) | ⚠️ Partial | 🔴 |
+| **A.5.24** | Incident Management Planning | Roles, responsibilities, and procedures for information security incident management | activity-log incident trail; rollback procedure; chain of command escalation; human IC has halt authority | ✅ | 🔴 |
+| **A.5.28** | Collection of Evidence | Evidence for incidents maintained and preserved | Full trail (git + observation substrate + activity log + messaging substrate) preserved; no explicit forensic preservation policy (evidence isolated from operational modification) | ⚠️ Partial | 🔴 |
 | **A.5.33** | Protection of Records | Records protected from loss, unauthorized access, and falsification | Redis streams are append-only; git history is immutable with standard commit discipline; no separate tamper-evident archival tier | ⚠️ Partial | 🔴 |
 | **A.8.3** | Information Access Restriction | Restrict access to information and systems per access control policy | AES-256-GCM; no key, no data regardless of Redis access; scoped addressing enforced by protocol | ✅ | 🔴 |
 | **A.8.9** | Configuration Management | Configurations documented, implemented, monitored, and audited | No formal configuration management for agent system prompts, model versions, tool configs | ❌ Gap | 🔴 |
 | **A.8.12** | Data Leakage Prevention | Detect and prevent unauthorized disclosure of information | No DLP monitoring of agent outputs for inadvertent sensitive data disclosure | ❌ Gap | 🟡 |
-| **A.8.15** | Logging | Activities, exceptions, faults, and security events logged in centralized, protected log store | attend narrations; clog task logs; fishtank streams — all timestamped, centralized | ✅ | 🔴 |
-| **A.8.16** | Monitoring | Networks, systems, and applications monitored for anomalous behavior | attend cross-machine monitoring; session heartbeats; no behavioral anomaly detection | ⚠️ Partial | 🔴 |
-| **A.8.24** | Use of Cryptography | Cryptography policy implemented; appropriate algorithms and key management | AES-256-GCM (content) + TLS (transport); key management via `~/.fishtank/config.yaml` | ✅ | 🔴 |
+| **A.8.15** | Logging | Activities, exceptions, faults, and security events logged in centralized, protected log store | observation-substrate narrations; activity-log entries; messaging-substrate streams — all timestamped, centralized | ✅ | 🔴 |
+| **A.8.16** | Monitoring | Networks, systems, and applications monitored for anomalous behavior | observation-substrate cross-machine monitoring; session heartbeats; no behavioral anomaly detection | ⚠️ Partial | 🔴 |
+| **A.8.24** | Use of Cryptography | Cryptography policy implemented; appropriate algorithms and key management | AES-256-GCM (content) + TLS (transport); key management via the orchestrator configuration file | ✅ | 🔴 |
 | **A.8.32** | Change Management | Material changes to information systems require formal approval and testing | No formal change approval workflow for agent configuration changes (prompt, model, tool permissions) | ❌ Gap | 🔴 |
 
 ---
@@ -241,8 +241,8 @@ Primary sources: [NERC CIP Standards Index](https://www.nerc.com/standards/relia
 | **CIP-005 R2** | MFA required for all Interactive Remote Access; Intermediate System between external networks and BES | No MFA for agent-to-Redis authentication beyond TLS + shared key | ❌ Gap | 🔴 |
 | **CIP-007 R1** | Only required ports enabled; all others disabled where technically feasible | Out of scope at protocol level — infrastructure configuration responsibility | 🚫 | ⚪ |
 | **CIP-007 R2** | Security patches assessed within 35 days of vendor release; applied or documented compensating controls | No patch management for agent framework dependencies | ❌ Gap | 🟡 |
-| **CIP-007 R4** | Security event logs retained minimum 90 calendar days; reviewed at intervals ≤15 days | attend + clog logs exist; no 90-day retention enforcement or 15-day review cadence | ⚠️ Partial | 🔴 |
-| **CIP-008** | Cyber security incident classification, reporting, response, and notification to NERC | Internal incident trail (clog + attend) comprehensive; no NERC reporting pipeline | ❌ Gap | 🟡 |
+| **CIP-007 R4** | Security event logs retained minimum 90 calendar days; reviewed at intervals ≤15 days | observation-substrate + activity-log entries exist; no 90-day retention enforcement or 15-day review cadence | ⚠️ Partial | 🔴 |
+| **CIP-008** | Cyber security incident classification, reporting, response, and notification to NERC | Internal incident trail (activity log + observation substrate) comprehensive; no NERC reporting pipeline | ❌ Gap | 🟡 |
 | **CIP-010 R1/R2** | Baseline configuration maintained per BES Cyber System; automated monitoring for unauthorized changes | Standardized git commits per period create known-good baseline; no automated config drift detection | ⚠️ Partial | 🔴 |
 | **CIP-011** | Classify BCSI; implement access controls; secure disposal procedures on decommission | Session-scoped access and encryption address access control; no BCSI classification or secure disposal procedure | ⚠️ Partial | 🟡 |
 | **CIP-013** | Supply chain cyber security risk management plan: vendor vulnerability notification, software integrity verification, vendor remote access controls | No supply chain risk management for LLM providers or framework vendors | ❌ Gap | 🟡 |
@@ -267,7 +267,7 @@ Primary sources: [SOC 2 Common Criteria — Secureframe](https://secureframe.com
 | **CC6.2** | Agent service accounts subject to same lifecycle management as human accounts (provision, review, deprovision) | Session registration/deregistration hooks; no periodic account review cadence | ⚠️ Partial | 🔴 |
 | **CC6.3** | Access based on least privilege and separation of duties | Workers isolated to session DMs; project channels scoped by role; no cross-worker visibility | ✅ | 🔴 |
 | **CC6.8** | Controls prevent or detect introduction of unauthorized software; agent code integrity validated at deployment | No integrity verification of agent code or model weights at deployment | ❌ Gap | 🟡 |
-| **CC7.1** | Monitoring to detect changes that could introduce vulnerabilities | attend monitors session activity; no automated vulnerability-introducing change detection | ⚠️ Partial | 🔴 |
+| **CC7.1** | Monitoring to detect changes that could introduce vulnerabilities | observation substrate monitors session activity; no automated vulnerability-introducing change detection | ⚠️ Partial | 🔴 |
 | **CC7.2** | Behavioral baselines established; statistical deviations generate alerts | No behavioral baselines or statistical alerting | ❌ Gap | 🔴 |
 | **CC7.3** | Security events assessed; AI behavioral anomalies classified as events | No automated event classification pipeline | ❌ Gap | 🟡 |
 | **CC7.4** | Robust incident response including agent suspension and evidence preservation | Kill switch per session; full audit trail for evidence; chain of command escalation | ✅ | 🔴 |
@@ -275,8 +275,8 @@ Primary sources: [SOC 2 Common Criteria — Secureframe](https://secureframe.com
 | **CC8.1** | All material system changes (agent prompts, model versions, tool permissions) tested and approved before deployment | Human IC approval gates at operational period boundaries; test suite required at every checkpoint | ✅ | 🔴 |
 | **CC9.1** | Risk mitigation for internal business disruption | Rollback to last checkpoint; graceful session handoff | ✅ | 🔴 |
 | **CC9.2** | Third-party vendor risks assessed and in vendor management program | No vendor management program for model API providers | ❌ Gap | 🟡 |
-| **A1.1** | System available per SLA commitments | attend cross-machine mesh; session handoff failover; no formal SLA tooling or availability measurement | ⚠️ Partial | 🟡 |
-| **PI1.1** | Processing is complete, accurate, and timely | Test suite at checkpoints; human review gates; attend narration verifies task completion | ✅ | 🔴 |
+| **A1.1** | System available per SLA commitments | observation-substrate cross-machine mesh; session handoff failover; no formal SLA tooling or availability measurement | ⚠️ Partial | 🟡 |
+| **PI1.1** | Processing is complete, accurate, and timely | Test suite at checkpoints; human review gates; observation-substrate narration verifies task completion | ✅ | 🔴 |
 
 ---
 
@@ -292,12 +292,12 @@ Primary sources: [HIPAA Technical Safeguards §164.312 — AccountableHQ](https:
 |----------|------|------|-------------|----------------|----------|-----------|
 | Risk Analysis | §164.308(a)(1)(ii)(A) | Required | Accurate and thorough assessment of potential risks to ePHI confidentiality, integrity, and availability | Operational period risk assessment; no formal ePHI risk analysis document generated | ⚠️ Partial | 🟡 |
 | Risk Management | §164.308(a)(1)(ii)(B) | Required | Implement security measures sufficient to reduce identified ePHI risks to reasonable levels | Risk-tiered checkpoints; rollback procedure; scoped access and encryption | ✅ | 🔴 |
-| Activity Review | §164.308(a)(1)(ii)(D) | Required | Regularly review records of information system activity; audit log review cadence | attend + clog reviewed at IC checkpoints; no enforced review cadence | ⚠️ Partial | 🔴 |
+| Activity Review | §164.308(a)(1)(ii)(D) | Required | Regularly review records of information system activity; audit log review cadence | observation-substrate + activity-log entries reviewed at IC checkpoints; no enforced review cadence | ⚠️ Partial | 🔴 |
 | Security Responsibility | §164.308(a)(2) | Required | Designate one individual responsible for security policies and procedures | Human IC is always human; named owner for every session | ✅ | 🔴 |
 | Access Authorization | §164.308(a)(4)(ii)(B) | Addressable | Procedures for granting access to ePHI; formal authorization document per agent | Session-scoped access; no formal ePHI access authorization document per agent type | ⚠️ Partial | 🔴 |
 | Termination Procedures | §164.308(a)(3)(ii)(C) | Addressable | Immediately terminate ePHI access when employment/engagement ends | session_end.sh deregisters; no formal ePHI access revocation confirmation | ⚠️ Partial | 🔴 |
-| Incident Response | §164.308(a)(6)(ii) | Required | Identify, respond to, and document security incidents involving ePHI; report to OCR | clog + attend trail; rollback; escalation to IC; no OCR reporting pipeline | ⚠️ Partial | 🟡 |
-| ePHI Data Backup | §164.308(a)(7)(ii)(A) | Required | Create and maintain retrievable exact copies of ePHI | Tank does not manage ePHI backup; this is enterprise responsibility; protocol should not be single point of ePHI access | ❌ Gap | ⚪ |
+| Incident Response | §164.308(a)(6)(ii) | Required | Identify, respond to, and document security incidents involving ePHI; report to OCR | activity log + observation-substrate trail; rollback; escalation to IC; no OCR reporting pipeline | ⚠️ Partial | 🟡 |
+| ePHI Data Backup | §164.308(a)(7)(ii)(A) | Required | Create and maintain retrievable exact copies of ePHI | The protocol does not manage ePHI backup; this is enterprise responsibility; protocol should not be single point of ePHI access | ❌ Gap | ⚪ |
 | Disaster Recovery | §164.308(a)(7)(ii)(B) | Required | Procedures for restoring ePHI data lost in emergencies | Rollback covers agent state; ePHI recovery plan is enterprise responsibility | ⚠️ Partial | ⚪ |
 | Workforce Training | §164.308(a)(5) | Addressable | Security awareness and training for all workforce members | Out of scope — human compliance layer | 🚫 | ⚪ |
 
@@ -309,7 +309,7 @@ Primary sources: [HIPAA Technical Safeguards §164.312 — AccountableHQ](https:
 | Unique User ID | §164.312(a)(2)(i) | Required | Assign unique identifier to every user AND software program | `source:prefix@user` addressing; `ft:users` registry; each session has unique prefix | ✅ | 🔴 |
 | Automatic Logoff | §164.312(a)(2)(iii) | Addressable | Terminate electronic sessions after defined period of inactivity | Session TTL via Redis; no configurable inactivity timeout per session | ⚠️ Partial | 🔴 |
 | Encryption/Decryption | §164.312(a)(2)(iv) | Addressable | Mechanism to encrypt and decrypt ePHI | AES-256-GCM on all message content | ✅ | 🔴 |
-| Audit Controls | §164.312(b) | Required | Hardware, software, and procedural mechanisms to record and examine activity in ePHI-containing systems | attend narrations; clog; fishtank streams — all timestamped | ✅ | 🔴 |
+| Audit Controls | §164.312(b) | Required | Hardware, software, and procedural mechanisms to record and examine activity in ePHI-containing systems | observation-substrate narrations; activity log; messaging-substrate streams — all timestamped | ✅ | 🔴 |
 | Integrity | §164.312(c)(1) | Required | Protect ePHI from improper alteration or destruction | Redis append-only streams; git history immutable | ✅ | 🔴 |
 | Person/Entity Authentication | §164.312(d) | Required | Verify that persons or entities seeking access to ePHI are who they claim to be | Session registration; user registry; TLS mutual auth to Redis | ✅ | 🔴 |
 | Transmission Security | §164.312(e)(1) | Required | Guard ePHI in transit from unauthorized access | TLS transport + AES-256-GCM content encryption (defense in depth) | ✅ | 🔴 |
@@ -319,7 +319,7 @@ Primary sources: [HIPAA Technical Safeguards §164.312 — AccountableHQ](https:
 
 ## Cross-Framework Summary
 
-| Concern | EU AI Act | NIST AI RMF | NIST CSF 2.0 | ISO 42001 | ISO 27001 | NERC CIP | SOC 2 | HIPAA | **Tank** |
+| Concern | EU AI Act | NIST AI RMF | NIST CSF 2.0 | ISO 42001 | ISO 27001 | NERC CIP | SOC 2 | HIPAA | **Protocol** |
 |---------|-----------|-------------|--------------|-----------|-----------|---------|-------|-------|----------|
 | **Human Oversight** | Art. 14 | GV-3.2 | GV.RR-02 | A.3.2 | A.5.16 | CIP-004 | CC1.4 | §164.308(a)(2) | ✅ Strong |
 | **Audit Trails / Logging** | Art. 12, 19 | Measure-2.4 | DE.CM-03 | A.6.2.8 | A.8.15 | CIP-007 R4 | CC7.1 | §164.312(b) | ✅ Strong |
@@ -348,8 +348,8 @@ Primary sources: [HIPAA Technical Safeguards §164.312 — AccountableHQ](https:
 | Priority | Gap | Affected Frameworks | Notes |
 |----------|-----|---------------------|-------|
 | **P1** | External reporting pipeline (SIEM, regulators, model providers) | EU AI Act Art. 73, NERC CIP-008, ISO 27001 A.5.24, NIST CSF RS.MA-01, HIPAA §164.308(a)(6) | Internal incident trail is comprehensive; need exportable report format, webhook to SIEM, and notification pipeline to regulators |
-| **P1** | Metrics dashboard and automated alerting | NIST AI RMF Measure-2.4/4.3, ISO 42001 Cl.9.1, SOC 2 CC7.2, NIST CSF DE.AE-01 | All underlying data exists in attend/clog/fishtank; need aggregation layer, KPI framework, and threshold-based alerting |
-| **P1** | Automated anomaly detection / behavioral baselines | NIST AI RMF Measure-3.1, NIST CSF DE.AE-01, SOC 2 CC7.2, ISO 27001 A.8.16, NERC CIP-007 R4 | attend monitors but no statistical baseline; human IC must notice anomalies manually; this is the biggest operational gap |
+| **P1** | Metrics dashboard and automated alerting | NIST AI RMF Measure-2.4/4.3, ISO 42001 Cl.9.1, SOC 2 CC7.2, NIST CSF DE.AE-01 | All underlying data exists in the observation substrate, activity log, and messaging substrate; need aggregation layer, KPI framework, and threshold-based alerting |
+| **P1** | Automated anomaly detection / behavioral baselines | NIST AI RMF Measure-3.1, NIST CSF DE.AE-01, SOC 2 CC7.2, ISO 27001 A.8.16, NERC CIP-007 R4 | observation substrate monitors but no statistical baseline; human IC must notice anomalies manually; this is the biggest operational gap |
 | **P2** | Log retention policy enforcement (minimum 6 months) | EU AI Act Art. 19, NERC CIP-007 R4 (90 days), ISO 27001 A.5.33 | Logs exist; no configurable retention enforcer; Redis streams can be capped; no archival tier |
 | **P2** | Agent configuration change control (prompts, model versions, tool permissions) | ISO 27001 A.8.9/A.8.32, NIST CSF PR.PS-01/03, NERC CIP-010 | Changes to agent configurations have no formal approval workflow; this is also an adversarial attack vector (unauthorized prompt modification = unauthorized config change) |
 | **P2** | Automated circuit breakers (suspend agent on error threshold) | NIST AI RMF Manage-2.4 | No mechanism to automatically suspend an agent when its error rate exceeds a threshold; requires human observation |
@@ -362,4 +362,4 @@ Primary sources: [HIPAA Technical Safeguards §164.312 — AccountableHQ](https:
 | 🚫 | Physical security | NERC CIP-006/014 | Physical layer — out of scope |
 | 🚫 | Personnel training and certification | NERC CIP-004 R1/R3, HIPAA §164.308(a)(5), NIST AI RMF GV-2.2 | Human compliance layer — out of scope |
 | 🚫 | Training data governance and bias testing | ISO 42001 A.7.2–A.7.6 | Model development concern — out of scope for a governance protocol |
-| 🚫 | Formal organizational policy documents (AI governance policy, QMS) | ISO 42001 A.2.2, Cl.5.2 | Management layer — Tank provides operational controls that a QMS references; does not generate the policy documents themselves |
+| 🚫 | Formal organizational policy documents (AI governance policy, QMS) | ISO 42001 A.2.2, Cl.5.2 | Management layer — the protocol provides operational controls that a QMS references; does not generate the policy documents themselves |
