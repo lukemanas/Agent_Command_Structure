@@ -1,0 +1,30 @@
+{"ts": "2026-05-01T02:26:47.455154+00:00", "event_type": "project_initiated", "project_id": "demo-001", "actor": "human", "payload": {"sow": {"project_title": "Demo: add /hello endpoint", "objective": "Add a GET /hello endpoint to the demo service that returns 'hello world'", "project_id": "demo-001", "risk_classification": "low", "context": ["./demo-service"]}}}
+{"ts": "2026-05-01T02:26:47.455379+00:00", "event_type": "agent_spawned", "project_id": "demo-001", "actor": "orchestrator", "payload": {"agent_id": "planning-1", "role": "planner", "auto_active": true}}
+{"ts": "2026-05-01T02:26:47.530851+00:00", "event_type": "oap_proposed", "project_id": "demo-001", "actor": "planning-1", "payload": {"period": 1}}
+{"ts": "2026-05-01T02:26:47.568670+00:00", "event_type": "agent_spawned", "project_id": "demo-001", "actor": "orchestrator", "payload": {"agent_id": "cos-1", "role": "cos"}}
+{"ts": "2026-05-01T02:26:47.569203+00:00", "event_type": "oap_approved", "project_id": "demo-001", "actor": "human", "payload": {"period": 1}}
+{"ts": "2026-05-01T02:26:47.569253+00:00", "event_type": "period_started", "project_id": "demo-001", "actor": "orchestrator", "payload": {"period": 1}}
+{"ts": "2026-05-01T02:26:47.681535+00:00", "event_type": "checkin_attempted", "project_id": "demo-001", "actor": "cos-1", "payload": {"role": "cos", "period_number": 99, "risk": "low", "objective_ids": []}}
+{"ts": "2026-05-01T02:26:47.681804+00:00", "event_type": "checkin_failed", "project_id": "demo-001", "actor": "cos-1", "payload": {"reason": "period mismatch", "expected": 1}}
+{"ts": "2026-05-01T02:26:47.720105+00:00", "event_type": "checkin_attempted", "project_id": "demo-001", "actor": "cos-1", "payload": {"role": "worker", "period_number": 1, "risk": "low", "objective_ids": []}}
+{"ts": "2026-05-01T02:26:47.720426+00:00", "event_type": "checkin_failed", "project_id": "demo-001", "actor": "cos-1", "payload": {"reason": "role mismatch", "expected": "cos"}}
+{"ts": "2026-05-01T02:26:47.757789+00:00", "event_type": "checkin_attempted", "project_id": "demo-001", "actor": "cos-1", "payload": {"role": "cos", "period_number": 1, "risk": "low", "objective_ids": []}}
+{"ts": "2026-05-01T02:26:47.758231+00:00", "event_type": "checkin_passed", "project_id": "demo-001", "actor": "cos-1", "payload": {"role": "cos", "period_number": 1, "risk": "low", "objective_ids": []}}
+{"ts": "2026-05-01T02:26:47.795017+00:00", "event_type": "agent_spawned", "project_id": "demo-001", "actor": "cos-1", "payload": {"agent_id": "worker-1", "role": "worker", "skill": "worker"}}
+{"ts": "2026-05-01T02:26:47.833056+00:00", "event_type": "issue_created", "project_id": "demo-001", "actor": "cos-1", "payload": {"issue_id": "issue-obj-1", "objective_id": "obj-1"}}
+{"ts": "2026-05-01T02:26:47.833328+00:00", "event_type": "issue_created", "project_id": "demo-001", "actor": "cos-1", "payload": {"issue_id": "issue-obj-2", "objective_id": "obj-2"}}
+{"ts": "2026-05-01T02:26:47.878545+00:00", "event_type": "issue_transition_rejected", "project_id": "demo-001", "actor": "worker-1", "payload": {"issue": "issue-obj-1", "reason": "agent not active"}}
+{"ts": "2026-05-01T02:26:47.916848+00:00", "event_type": "checkin_attempted", "project_id": "demo-001", "actor": "worker-1", "payload": {"role": "worker", "period_number": 1, "risk": "low", "objective_ids": ["obj-1", "obj-2"]}}
+{"ts": "2026-05-01T02:26:47.917273+00:00", "event_type": "checkin_passed", "project_id": "demo-001", "actor": "worker-1", "payload": {"role": "worker", "period_number": 1, "risk": "low", "objective_ids": ["obj-1", "obj-2"]}}
+{"ts": "2026-05-01T02:26:47.954313+00:00", "event_type": "scope_expansion_rejected", "project_id": "demo-001", "actor": "human", "payload": {"attempted_objective": "obj-99"}}
+{"ts": "2026-05-01T02:26:47.991634+00:00", "event_type": "issue_transitioned", "project_id": "demo-001", "actor": "worker-1", "payload": {"issue": "issue-obj-1", "from": "open", "to": "in-progress"}}
+{"ts": "2026-05-01T02:26:48.029412+00:00", "event_type": "issue_transitioned", "project_id": "demo-001", "actor": "worker-1", "payload": {"issue": "issue-obj-1", "from": "in-progress", "to": "ready-for-review"}}
+{"ts": "2026-05-01T02:26:48.067012+00:00", "event_type": "issue_transitioned", "project_id": "demo-001", "actor": "cos-1", "payload": {"issue": "issue-obj-1", "from": "ready-for-review", "to": "pending-review"}}
+{"ts": "2026-05-01T02:26:48.105356+00:00", "event_type": "issue_transition_rejected", "project_id": "demo-001", "actor": "cos-1", "payload": {"issue": "issue-obj-1", "reason": "verified-before-close: no verification recorded"}}
+{"ts": "2026-05-01T02:26:48.143805+00:00", "event_type": "verification_recorded", "project_id": "demo-001", "actor": "worker-1", "payload": {"issue": "issue-obj-1", "method": "pytest tests/test_hello.py \u2014 1 passed"}}
+{"ts": "2026-05-01T02:26:48.181394+00:00", "event_type": "issue_transitioned", "project_id": "demo-001", "actor": "cos-1", "payload": {"issue": "issue-obj-1", "from": "pending-review", "to": "closed"}}
+{"ts": "2026-05-01T02:26:48.218702+00:00", "event_type": "scope_reduced", "project_id": "demo-001", "actor": "human", "payload": {"objective_id": "obj-2", "reason": "out of time; deferring test to next OP"}}
+{"ts": "2026-05-01T02:26:48.256775+00:00", "event_type": "arr_proposed", "project_id": "demo-001", "actor": "cos-1", "payload": {"period": 1, "status": "complete", "incomplete": []}}
+{"ts": "2026-05-01T02:26:48.294847+00:00", "event_type": "arr_approved", "project_id": "demo-001", "actor": "human", "payload": {"decision": "accept"}}
+{"ts": "2026-05-01T02:26:48.295071+00:00", "event_type": "period_ended", "project_id": "demo-001", "actor": "orchestrator", "payload": {"period": 1}}
+{"ts": "2026-05-01T02:26:48.332255+00:00", "event_type": "sandbox_destroyed", "project_id": "demo-001", "actor": "human", "payload": {}}

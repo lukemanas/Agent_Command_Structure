@@ -1,0 +1,19 @@
+{
+  "period_number": 1,
+  "status": "complete",
+  "objectives_outcome": [
+    {
+      "id": "obj-1",
+      "outcome": "verified",
+      "verification": "pytest tests/test_hello.py \u2014 1 passed",
+      "notes": ""
+    }
+  ],
+  "incomplete": [],
+  "scope_changes": [],
+  "performance": [],
+  "risks_observed": [],
+  "recommendations_for_next_oap": [],
+  "human_decision": "accept",
+  "human_comments": "obj-1 verified; obj-2 deferred per scope reduction"
+}

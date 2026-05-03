@@ -1,0 +1,9 @@
+{
+  "project_title": "Demo: add /hello endpoint",
+  "objective": "Add a GET /hello endpoint to the demo service that returns 'hello world'",
+  "project_id": "demo-001",
+  "risk_classification": "low",
+  "context": [
+    "./demo-service"
+  ]
+}

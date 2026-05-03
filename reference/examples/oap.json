@@ -1,0 +1,41 @@
+{
+  "period_number": 1,
+  "duration": "1h",
+  "strategy": "Worker adds the /hello route to demo-service/service.py and a corresponding unittest. CoS verifies via test run.",
+  "context": [
+    {"type": "codebase", "ref": "./demo-service/service.py", "description": "the dispatch table is ROUTES; add new entries there"},
+    {"type": "codebase", "ref": "./demo-service/tests/", "description": "existing tests; new test file goes here"}
+  ],
+  "objectives": [
+    {
+      "id": "obj-1",
+      "title": "Add /hello route to demo-service",
+      "description": "Add a GET /hello route that returns 200 with body 'hello world'. Insert the entry into ROUTES in demo-service/service.py.",
+      "criteria": [
+        "demo-service/service.py contains a /hello entry in ROUTES with status 200 and body 'hello world'",
+        "calling handle('/hello') from a Python REPL returns (200, 'hello world')"
+      ],
+      "context": [
+        {"type": "codebase", "ref": "./demo-service/service.py"}
+      ]
+    },
+    {
+      "id": "obj-2",
+      "title": "Add unittest for /hello",
+      "description": "Add a test in demo-service/tests/test_hello.py that asserts both criteria from obj-1.",
+      "criteria": [
+        "demo-service/tests/test_hello.py exists and contains a unittest.TestCase",
+        "test passes when run with: python3 -m unittest discover demo-service/tests",
+        "running the full test suite reports at least 3 tests (existing 2 + new)"
+      ],
+      "context": [
+        {"type": "codebase", "ref": "./demo-service/tests/test_service.py", "description": "existing test file as a template"}
+      ],
+      "dependencies": ["obj-1"]
+    }
+  ],
+  "assignments": [
+    {"role": "cos", "objective_ids": ["obj-1", "obj-2"], "skill": "cos"},
+    {"role": "worker", "objective_ids": ["obj-1", "obj-2"], "skill": "worker"}
+  ]
+}
