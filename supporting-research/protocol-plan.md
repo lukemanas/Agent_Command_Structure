@@ -8,7 +8,7 @@
 
 The work is being framed as an open-source governance protocol for safely deploying AI agents at scale — the same pattern as MCP (tool connectivity), one layer up (fleet governance).
 
-Key insight: MCP is a protocol. Earlier work on this resembled a software stack. The pitch only works as a lightweight protocol spec, not a heavy binary.
+Key insight: MCP is a protocol. Earlier work on this resembled a software stack. The argument only works as a lightweight protocol spec, not a heavy binary.
 
 The breakthrough: a network identity / ACL layer (e.g., Tailscale/Headscale, Calico, Kubernetes NetworkPolicies) collapses most of the governance enforcement into infrastructure primitives — identity, ACLs, network segmentation, network-level audit. What remains at the application layer is thin: a schema, lifecycle states, and conventions. That's a protocol.
 
@@ -108,6 +108,6 @@ A protocol spec document plus at least one reference implementation demonstratin
 2. **Network identity / ACL layer is the enforcement backbone.** Identity, ACLs, segmentation, and network-level audit collapse into infrastructure primitives. The protocol does not mandate which network identity layer; reference implementations target Tailscale, Kubernetes NetworkPolicies, and similar.
 3. **No literal timer.** Periods end on objective completion or human decision, not a clock.
 4. **Spec first, build after.** Define the protocol, demo with existing tools, build orchestration later.
-5. **MCP playbook.** Open-source the spec, donate to a neutral standards body (AAIF), reference implementation runs the standard.
+5. **Open standard, neutral home.** The spec is open-source and intended for governance under a neutral standards body. A vendor's runtime can serve as a reference implementation; the spec itself is not vendor-owned.
 6. **OAP and Issue schemas stay separate.** The OAP is protocol-level — the governance contract the human signs off on, the document that drives policy mapping. Issues (work units a CoS creates from OAP objectives) are implementation-level — how a team tracks execution. The protocol standardizes the OAP; issue tracking is an adopter choice (GitHub, Linear, Jira). Keeps the protocol thin.
 7. **All three major agent runtimes already support containers.** Claude Code (Docker devcontainers), Codex (native cloud containers), and Gemini CLI (microVM sandboxes) all support containerized agent execution. The governance protocol's container model aligns with the direction all three vendors are already moving.

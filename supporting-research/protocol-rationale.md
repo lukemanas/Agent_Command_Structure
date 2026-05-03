@@ -12,8 +12,6 @@ OpenAI launched Frontier on February 5, 2026 — a proprietary, consultant-depen
 
 The protocol described here is an ICS-informed agent governance design: lifecycle-phased execution (base → harness → planning → operational period → demobilization), container-enforced isolation, vault-managed credentials, chain of command, human-in-the-loop enforcement at every exit, encrypted scoped communication, structured handoffs, and audit trails that map to EU AI Act Article 12 out of the box. It is not a competitor to LangGraph or Frontier. It is the governance layer that would sit under all of them.
 
-The pitch: do what Anthropic did with MCP, one layer up the stack. MCP solved tool connectivity. This solves governance. Both are protocols every enterprise needs, that must be neutral to work, and that position the supporting vendor as the native implementation of a standard they helped create.
-
 The timing: EU AI Act high-risk AI enforcement is August 2, 2026. Only 8 of 27 EU member states have designated enforcement contacts. Standards bodies missed their 2025 deadline for compliance technical standards. Enterprises face a hard deadline with no clear tooling. Frontier is still limited availability, still consultingware. The window to establish the governance standard before enterprises lock in their architectural choices is open. It will not stay open.
 
 ---
@@ -115,71 +113,9 @@ Additionally: on February 23, 2026, OpenAI announced multiyear implementation pa
 
 ---
 
-## III. The Anthropic Fit Is Structural
+## III. The Architecture: Governance as Infrastructure
 
-### What Anthropic Has Built
-
-Through late 2025 and early 2026, Anthropic has been building the enterprise AI stack:
-
-- **Self-serve enterprise plans** (2026): direct purchase without a sales conversation
-- **Agent Skills open standard** (December 2025): organization-wide skill management, open standard for cross-platform compatibility ([Anthropic Engineering](https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills))
-- **Claude Opus 4.6** (February 5, 2026): 1M-token context, native agent team coordination for multi-agent coding, 14.5-hour task completion time horizon
-- **Cowork platform** (January 30, 2026): multi-step workflow execution, transparent reasoning, human-judgment deferral for high-stakes decisions. Enterprise plugins for finance, legal, HR ([TechCrunch](https://techcrunch.com/2026/02/24/anthropic-launches-new-push-for-enterprise-agents-with-plugins-for-finance-engineering-and-design/))
-- **Claude Partner Network** (2026): $100M initial investment for enterprise adoption ([Anthropic](https://www.anthropic.com/news/claude-partner-network))
-- **$30B Series G** (February 2026) at $380B valuation — a massive bet on enterprise adoption at scale
-- **Enterprise governance controls**: private plugin marketplaces, administrator visibility over usage/costs/tool activity across teams
-
-### What Anthropic Is Missing
-
-Despite this, the operational governance layer is absent:
-
-1. **No inter-agent communication protocol across sessions or machines.** Agent teams in Claude Code coordinate within a single context. There is no structured messaging layer for agents across sessions, machines, or model families — no persistent mailboxes, no scoped channels, no session addressing. The messaging substrate this protocol assumes is that layer.
-
-2. **No lifecycle-phased governance layer.** Anthropic has model-level safety (ASL tiers) and task-level coordination (Agent Skills). There is no governance at the deployment level: no project containers, no lifecycle phases, no OAPs with human checkpoints, no structured handoffs. The gap between "Claude is safe" and "Claude is deployable in production at organizational scale" is wide.
-
-3. **Skill governance is undefined.** The New Stack noted: "Organizations will need to establish clear processes for auditing, testing, and deploying skills from trusted sources. There will be a need for skill registries to manage the discovery and distribution of skills, and policy engines to control which agents can use which skills." Anthropic published the open standard. The governance tooling is unaddressed. ([The New Stack](https://thenewstack.io/agent-skills-anthropics-next-bid-to-define-ai-standards/))
-
-4. **No multi-model governance.** Anthropic's tooling governs Claude agents. Enterprises deploying Claude, GPT, and Gemini side-by-side have no shared governance layer. The protocol is model-agnostic by design. This is not a hypothetical: HP, Intuit, Oracle, and State Farm — Frontier's own early customers — all have existing relationships with Google, Microsoft, and Anthropic. Their enterprise agent fleets will not be GPT-only. The governance layer for those fleets cannot be Frontier; it's OpenAI's platform. It needs to be a neutral standard.
-
-### The MCP Playbook
-
-Anthropic has already demonstrated exactly this pattern with MCP:
-
-| Date | Milestone | Source |
-|------|-----------|--------|
-| November 2024 | Anthropic open-sources MCP spec + SDKs; pre-built servers for GitHub, Slack, Google Drive, Postgres | [Anthropic](https://www.anthropic.com/news/model-context-protocol) |
-| March 2025 | OpenAI adopts MCP across Agents SDK, Responses API, ChatGPT desktop | [Pento Year of MCP](https://www.pento.ai/blog/a-year-of-mcp-2025-review) |
-| April 2025 | Google DeepMind confirms MCP support in Gemini | [Pento](https://www.pento.ai/blog/a-year-of-mcp-2025-review) |
-| June 2025 | Salesforce Agentforce 3 adopts MCP | [Pento](https://www.pento.ai/blog/a-year-of-mcp-2025-review) |
-| December 2025 | Anthropic donates MCP to Linux Foundation's Agentic AI Foundation (AAIF) | [Anthropic](https://www.anthropic.com/news/donating-the-model-context-protocol-and-establishing-of-the-agentic-ai-foundation) |
-| February 2026 | 10,000+ MCP servers deployed; 97M+ monthly SDK downloads | [Pento](https://www.pento.ai/blog/a-year-of-mcp-2025-review) |
-| March 2026 | AAIF grows to 146 members; MCP Dev Summit NYC April 2-3 | [Linux Foundation](https://www.linuxfoundation.org/press/agentic-ai-foundation-welcomes-97-new-members) |
-
-**The pattern:** (1) Identify a coordination problem every AI developer hits. (2) Open-source the protocol; retain reference implementation advantage. (3) Drive industry-wide adoption until the protocol is the standard. (4) Claude is the native, best-supported implementation of a standard Anthropic created. (5) Donate to AAIF for cross-vendor legitimacy.
-
-A governance protocol is the next step in this sequence. MCP connects agents to tools. Agent Skills deploys skills to agents. A governance protocol governs how agent fleets are commanded, coordinated, audited, and controlled by humans. One layer up the stack each time.
-
-**The AAIF is already the right home.** The Agentic AI Foundation houses MCP, goose (Block), AGENTS.md (OpenAI), and A2A (Google). Membership has grown to 146 organizations. Anthropic is a founding platinum member. Donating a governance protocol to AAIF is structurally identical to the MCP donation — the contributing vendor retains the reference implementation while making governance a neutral standard that competitors must support. ([Linux Foundation](https://www.linuxfoundation.org/press/linux-foundation-announces-the-formation-of-the-agentic-ai-foundation))
-
-### Counter-Argument: "Anthropic Would Just Build This Themselves"
-
-*The strongest version:* Anthropic has $30B in fresh capital, 1,000+ engineers, a dedicated enterprise team, and a clear roadmap. Agent teams, Agent Skills, Cowork — they're building this stack fast. Why would they need an external contribution when they're six months away from shipping their own version?
-
-**Response:** The governance protocol is the one layer where Anthropic *cannot* be the sole author and have it work.
-
-MCP's success depended on OpenAI, Google, and Salesforce adopting it. They adopted it because it was published as an open standard by Anthropic but governed neutrally. If Anthropic had shipped MCP as a proprietary Claude feature, competitors would have built alternatives and fragmentation would have followed.
-
-The same logic applies to governance. Enterprise buyers at Cisco, T-Mobile, or BBVA — the same enterprises in Frontier's pilot program — will not adopt a governance framework from any single vendor if they perceive it as a lock-in mechanism. They need a multi-vendor, model-agnostic protocol. The AAIF provides that neutral umbrella.
-
-Additionally: Tatyana Mamut (CEO, Wayfound), speaking about Frontier, said enterprises "don't want to be locked into a single vendor or platform because AI strategies are ever-evolving." ([VentureBeat](https://venturebeat.com/orchestration/openai-launches-centralized-agent-platform-as-enterprises-push-for-multi)) The same sentiment applies across vendors. The protocol needs to be neutral. Contributed as an open spec and donated to AAIF, it IS neutral.
-
-The pitch is not "vendor X should use this instead of building their own." The pitch is "vendor X should back this as the open-source governance standard the same way Anthropic backed MCP — because a neutral standard serves their enterprise adoption goals better than a proprietary one."
-
----
-
-## IV. The Architecture: Governance as Infrastructure
-
-> This section summarizes the architecture defined at depth in `2026-03-17-governance-mvp-design.md`. Treat that doc as canonical; this is the pitch-shaped summary.
+> This section summarizes the architecture. The canonical specification is in `../governance-protocol.md`.
 
 ### The Project Container
 
@@ -269,53 +205,23 @@ An enterprise running a conformant implementation of this protocol can answer ev
 
 ---
 
-## V. The Timing Window
+## IV. The Timing Window
 
-### Why Now
+Two forces are converging:
 
-Three forces are converging:
+**1. The regulatory hard stop.** EU AI Act Article 12 enforcement begins August 2, 2026. Only 8 of 27 EU member states have designated enforcement contacts. Standards bodies missed their deadline. Enterprises need governance tooling that generates compliant audit artifacts. They are evaluating options now, not in Q3.
 
-**1. The regulatory hard stop.** EU AI Act Article 12 enforcement begins August 2, 2026 — 127 days from today. Only 8 of 27 EU member states have designated enforcement contacts. Standards bodies missed their deadline. Enterprises need governance tooling that generates compliant audit artifacts. They're evaluating options now, not in Q3.
-
-**2. Frontier is still consultingware.** The Accenture/BCG/McKinsey/Capgemini partnership confirms Frontier is a professional services product, not a self-serve protocol. As of March 2026, it remains limited-availability with no public pricing or self-serve option. This leaves the open-source governance protocol lane wide open. The window closes when Frontier ships a self-serve version or when Microsoft Agent Framework adds meaningful governance features.
-
-**3. AAIF provides the path.** The neutral home for donating a governance protocol already exists, has grown to 146 members, and Anthropic co-founded it. The bureaucratic and organizational path to donation is clear. The MCP Dev Summit is April 2-3 in NYC — a natural venue for introducing governance as the next protocol layer. Six months from now the AAIF may be crowded with competing governance proposals from Google (A2A is already there) and Microsoft (50+ partners backing A2A, Azure-native governance features expanding).
+**2. Frontier is still consultingware.** The Accenture/BCG/McKinsey/Capgemini partnership confirms Frontier is a professional services product, not a self-serve protocol. As of March 2026, it remains limited-availability with no public pricing or self-serve option. This leaves the open governance lane open. The window narrows when Frontier ships a self-serve version or when Microsoft Agent Framework adds meaningful governance features.
 
 ### Counter-Argument: "This Is Too Early / Too Late"
 
 *The "too early" version:* Enterprises are still in POC phase. Only 23% are scaling. The mass deployment of agent fleets where governance really bites is 2-3 years away. Building governance infrastructure for a problem enterprises don't yet have at scale is premature.
 
-*The "too late" version:* The governance conversation has already started. ISO 42001 was certified in 2023. NIST AI RMF shipped January 2023. Every major consulting firm has an AI governance practice. Anthropic, Google, and Microsoft all have governance narratives. The standards are already being written; this protocol is late to that table.
+*The "too late" version:* The governance conversation has already started. ISO 42001 was certified in 2023. NIST AI RMF shipped January 2023. Every major consulting firm has an AI governance practice. The standards are already being written; this protocol is late to that table.
 
-**Response to "too early":** Standards must precede mass adoption to work. HTTP, TCP/IP, and XML were all defined before the applications that depended on them existed at scale. MCP was published in November 2024 — before 97M monthly SDK downloads required it. The moment to establish a governance protocol is before enterprise architectural decisions calcify around Frontier's closed model or before 10 incompatible frameworks fragment the market. Governance adopted reactively — after incidents, after regulatory fines — is always harder and more expensive than governance built in.
+**Response to "too early":** Standards must precede mass adoption to work. HTTP, TCP/IP, and XML were all defined before the applications that depended on them existed at scale. The moment to establish a governance protocol is before enterprise architectural decisions calcify around closed platforms or before incompatible frameworks fragment the market. Governance adopted reactively — after incidents, after regulatory fines — is always harder and more expensive than governance built in.
 
 **Response to "too late":** The existing governance frameworks (ISO 42001, NIST AI RMF) are management-level standards — they describe what a QMS looks like, not how to implement it technically for agent fleets. None of them specify project containers, operational period mechanics, or chain-of-command procedures. They are the *requirements*; this protocol is the *implementation*. Being late to the standards conversation does not mean being late to the implementation conversation. That conversation is just beginning.
-
----
-
-## VI. The Ask
-
-The MCP case is the pitch in miniature. In November 2024, Anthropic open-sourced a protocol every AI developer needed. Eighteen months later: 97M monthly downloads, adopted by OpenAI, Google, and Salesforce, donated to a neutral Linux Foundation body with 146 members. Claude is the native, best-supported implementation of a standard Anthropic created. The enterprise flywheel that followed was not an accident — it was the predictable consequence of owning the protocol layer before competitors did.
-
-This is that move, one layer up the stack. The governance design is deep, coherent, and grounded in 50 years of federally mandated coordination science. The lifecycle phases, OAP schema, chain-of-command semantics, audit event format, and capability-to-policy mapping are specified at depth in the carryover documents. The compliance mapping against eight regulatory frameworks is documented. What's needed next is a reference implementation and a partner with platform distribution.
-
-**The structure that works:**
-
-Back this governance protocol as an open standard. The same path as MCP: formalize the spec, publish it with platform-vendor backing, donate it to the Agentic AI Foundation — the neutral body where MCP already lives. The supporting vendor's runtime becomes the reference implementation. The vendor retains the ecosystem positioning advantage while the standard becomes genuinely model-agnostic and cross-vendor.
-
-This is the only structure that works strategically, for the same reason MCP's open approach worked: a governance protocol any single vendor keeps proprietary is just another form of lock-in — the same critique that makes Frontier vulnerable. OpenAI cannot donate Frontier's governance to AAIF. A neutral standard housed in AAIF can be donated. That asymmetry is the competitive play. Every enterprise that adopts the open governance standard is one fewer customer for a closed platform.
-
-**What the supporting vendor gets:**
-
-The same flywheel MCP created for tool integration, now for fleet governance. Every enterprise that structures their agent deployment around project containers, OAPs, chain of command, and lifecycle phases builds a workflow that is natively compatible with the reference implementation's runtime. Not locked in — the standard is open — but the supporting vendor is the platform where the governance standard lives, the documentation is best, and the reference implementation runs. The governance layer becomes the on-ramp to the supporting vendor's ecosystem.
-
-A direct counter to Frontier's lock-in strategy. OpenAI's enterprise flywheel depends on governance being a platform feature enterprises must buy. An open governance standard housed in AAIF makes that strategy untenable. The MCP playbook has already demonstrated how to run this play.
-
-Credibility in regulated verticals that OpenAI cannot claim. ICS is the emergency management protocol used in every US hospital, every utility control room, every FEMA deployment. CISOs and OT engineers in financial services, healthcare, energy, and government already speak ICS. A governance framework derived from 50 years of federally mandated coordination science carries weight in those rooms in a way that Frontier never will.
-
-**The window is four months.** EU AI Act enforcement is August 2, 2026. Enterprises are making governance architecture decisions now. The standard adopted in this window will run for the next five years. Frontier is still limited-availability consultingware. Microsoft Agent Framework is Azure-centric and governance-light. The open governance lane is open.
-
-The spec is ready. The reference implementation is the next step.
 
 ---
 
@@ -339,12 +245,6 @@ The spec is ready. The reference implementation is the next step.
 - [CNBC: OpenAI consulting partnerships with Accenture, BCG, McKinsey, Capgemini](https://www.cnbc.com/2026/02/23/open-ai-consulting-accenture-boston-capgemini-mckinsey-frontier.html)
 - [Futurum Group: OpenAI Frontier — consultingware critique](https://futurumgroup.com/insights/openai-frontier-close-the-enterprise-ai-opportunity-gap-or-widen-it/)
 - [VentureBeat: Enterprises push for multi-vendor architectures](https://venturebeat.com/orchestration/openai-launches-centralized-agent-platform-as-enterprises-push-for-multi)
-- [The New Stack: Agent Skills governance gaps](https://thenewstack.io/agent-skills-anthropics-next-bid-to-define-ai-standards/)
-- [Anthropic: Model Context Protocol](https://www.anthropic.com/news/model-context-protocol)
-- [Anthropic: Donating MCP to AAIF](https://www.anthropic.com/news/donating-the-model-context-protocol-and-establishing-of-the-agentic-ai-foundation)
-- [Anthropic: Claude Partner Network](https://www.anthropic.com/news/claude-partner-network)
-- [TechCrunch: Anthropic enterprise agent plugins](https://techcrunch.com/2026/02/24/anthropic-launches-new-push-for-enterprise-agents-with-plugins-for-finance-engineering-and-design/)
-- [Pento: A Year of MCP — 2025 Review](https://www.pento.ai/blog/a-year-of-mcp-2025-review)
-- [Linux Foundation: Agentic AI Foundation formation](https://www.linuxfoundation.org/press/linux-foundation-announces-the-formation-of-the-agentic-ai-foundation)
-- [Linux Foundation: AAIF welcomes 97 new members](https://www.linuxfoundation.org/press/agentic-ai-foundation-welcomes-97-new-members)
-- [Anthropic: Agent Skills open standard](https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills)
+- [Docker: Claude Code sandboxes](https://docs.docker.com/ai/sandboxes/agents/claude-code/)
+- [OpenAI: Codex sandboxing](https://developers.openai.com/codex/concepts/sandboxing)
+- [Google Gemini CLI](https://github.com/google-gemini/gemini-cli)
