@@ -42,7 +42,6 @@ The protocol as specified addresses these requirements structurally — the life
   - [`audit-event-schema.md`](supporting-research/audit-event-schema.md) — 27 typed governance events, EU AI Act mapped
   - [`ics-research.md`](supporting-research/ics-research.md) — ICS / NIMS source material and its mapping to agent coordination
   - [`compliance-mapping.md`](supporting-research/compliance-mapping.md) — draft crosswalk against EU AI Act, NIST, and ISO frameworks (currently flagged stale, pending rebuild)
-  - [`protocol-rationale.md`](supporting-research/protocol-rationale.md) — motivating argument for an open governance standard
 - [**`Agent_CS.excalidraw`**](Agent_CS.excalidraw) — visual reference of the lifecycle and enforcement layers.
 
 ## Status
