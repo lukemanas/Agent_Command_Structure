@@ -28,31 +28,9 @@
 
 ---
 
-I think this is missing a bunch of stuff and has fluff in other places - the limiting factor of sclaing agentic deployment is human management capability. 
-
-Agentic deployment is limited by at least two factors, inherent inconsistencies in how LLMs opperate and a lack of accountability when downside risk to their deployment occurs. (i.e. when a waymo has an acceident there is a news story, when a human does the same thing there is none) Where there is no risk, agentic decision making is trivial whether strategic or tactical, but given consequences of real time deployment it is not tennable for agents to be making decisions for which they cannot ultimately be held accountable. 
-
-the risk of the agentic enterprise is not only chaos of multiple agents not coordinated without clear authorization chains but in best case scenarios gradual disempowerment as human in the loop oversite continues to be driven up to higher levels of abstraction. 
-
-this being said the limiting factor ro scaling agentic infrastructure is the camapbility of humans to meaningfully direct and control them. as such, structures designed to optimize human managment and delegation capabilities in high risk scenarios can serve as the structural guides for adoption. 
-
-perhaps some of the attention awareness stuff is relevant here but im not so sure. it Guides UI/UX but the idea is NIMS solved for this. Agentic infrasturcture scales it. 
-
-In general on the scale from deterministic to random, one always wants to choose the tool that is further to the left. 
-
- 
-
-
-
 ## Section 2: Governance, Authority, and the Bridge (P6–P13)
 
 *Governance defined; human authority established; the bridge function explained.*
-
-this is true the right to decide with power to execute. Specifically for agents, they are designed to have agency just like humans and uncoordinated and ungoverned agents has the same issues as trying to manage many people with individual agendas. 
-
-lack of clear decision rights breeds confusion and organization paralysis. often times the answer is overlly beurocratic systems than end up being schlerotic and those who are best at navigating the system often get things done. any governance system should be agile and effective putting accountability on single parties wherever possible and clear lines of responsbility. throughout. 
-
-NIMS is designed for managing humans effectively in crisis, and it can be extended to scaling agentic intelligence indeffinitely since the human as accountable party is the limiting factor. 
 
 **P6. [AXIOM]** Governance is the mechanism for aligning who has the right to decide with who has the power to execute. When they are aligned, authorized people drive what gets done. When they diverge, one of two failure modes follows: authorized people cannot act, or capable people act without authorization.
 
@@ -61,8 +39,6 @@ NIMS is designed for managing humans effectively in crisis, and it can be extend
 **P8. [AXIOM]** Every agent must have a named human principal. An agent without an accountable owner is not a governed actor.
 
 **P9. [DERIVED from P1, P7, P8]** Given P1 (agents are parallel and tireless but context-limited), P7 (humans command), and P8 (named principal required), agents have execution power but no inherent authority — no objectives of their own, no organizational context, no understanding of their principal's trade-offs. The gap between execution capability and decision authority is larger with agents than with any human worker.
-
-i dont know if its true, they should know contesxt have memory etc. 
 
 **P10. [DERIVED from P6, P9]** Given P6 and P9, governance exists to close the authority-execution gap — to ensure that the humans with the right to decide are the ones actually driving what agents do, and that every agent action traces back to an explicit human authorization.
 

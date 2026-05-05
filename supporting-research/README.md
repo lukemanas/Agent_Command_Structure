@@ -8,7 +8,6 @@ The fuller body of work behind the Agent Command Structure protocol.
 - `ics-research.md` — source ICS / NIMS material and its mapping to agent coordination
 - `compliance-mapping.md` — crosswalk against EU AI Act, NIST AI RMF, and ISO 42001
 - `protocol-rationale.md` — the case for an open governance standard
-- `governance.md` — short-form argument for ICS-as-governance
 
 For the canonical protocol specification, see `../governance-protocol.md`.
 For the reference implementation, see `../reference/`.

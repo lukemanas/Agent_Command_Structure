@@ -87,14 +87,14 @@ Phase transition in the governance lifecycle.
 {
   "event_type": "lifecycle.transition",
   "detail": {
-    "from_phase": "harness",
+    "from_phase": "initiation",
     "to_phase": "planning",
     "trigger": "sow_approved"
   }
 }
 ```
 
-Valid phases: `base`, `harness`, `planning`, `operational`, `demobilization`.
+Valid phases: `base`, `initiation`, `planning`, `operational`, `demobilization`.
 
 #### `period.started`
 Operational period begins (MOBILIZE state entered).

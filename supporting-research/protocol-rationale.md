@@ -1,5 +1,7 @@
 # Making the Case: an Open-Source Governance Protocol for Enterprise AI Agents
 
+> ⚠️ **Older document — adoption case, not the current research framing.** This brief was written when ACS was being positioned as a product/standard for enterprise adoption. The current framing — research artifact in three phases (protocol design, reference architecture, experimental design) — lives in the [main README](../README.md). Read this for the regulatory and competitive context; treat the advocacy tone as historical.
+>
 > A prosecutorial brief for an open governance standard for enterprise AI agents.
 >
 > Last updated: March 28, 2026 — substrate-scrubbed and tense-corrected for the protocol carryover (April 2026). The original document claimed working code in production; this version describes the protocol as designed and pending reference implementation.

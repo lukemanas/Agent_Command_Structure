@@ -20,7 +20,7 @@ Simplification: no literal timer on operational periods. OAPs scope to estimates
 
 1. **OAP Schema (Operational Action Plan)** — A JSON document defining what agents are authorized to do in a single work period: objectives, assignments, access requirements, acceptance criteria, duration estimate. Human approves before execution. Scope can shrink mid-period but never expand.
 
-2. **Lifecycle States** — A state machine for governance phases: base → harness → planning → operational period → demobilization. Each transition has defined rules and a human gate.
+2. **Lifecycle States** — A state machine for governance phases: base → initiation → planning → operational period → demobilization. Each transition has defined rules and a human gate.
 
 3. **Chain of Command Semantics** — How roles relate: workers → supervisors → CoS → human. Who can direct whom, who reports to whom, escalation rules. No bypassing, no freelancing.
 
