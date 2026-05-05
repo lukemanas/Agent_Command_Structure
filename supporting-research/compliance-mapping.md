@@ -1,14 +1,16 @@
 # Compliance Framework Mapping: Governance Protocol
 
+> ⚠️ **STALE — PENDING REBUILD.** This document was assembled in February 2026 against a platform-specific implementation (with named components: "observation substrate," "activity log," "messaging substrate," "session registry") that predates the current substrate-agnostic protocol in [`../governance-protocol.md`](../governance-protocol.md). The framework column (article numbers, NIST controls, ISO clauses, NERC/HIPAA/SOC sections) is reusable as-is. The "Protocol Mechanism" column and the coverage status column reflect the old platform's components and capabilities — not the protocol-as-currently-specified — and need a full rebuild against current vocabulary (audit event stream, objective tracker, COP query, registry, OAP/ARR) before this document can be cited as authoritative. Reader: treat protocol-mechanism cells and status icons as historical, not current.
+>
+> ---
+>
 > For each requirement, this document records: the specific control ID and text, what the protocol provides, coverage status, and at least one primary source.
 >
 > Coverage: ✅ Addressed · ⚠️ Partial · ❌ Gap · 🚫 Out of scope (physical or human layer)
 >
 > Relevance: 🔴 Directly applicable to the protocol layer · 🟡 Relevant with enterprise configuration · ⚪ Out of scope for a communication/governance protocol
 >
-> Last updated: February 23, 2026 (substrate-scrubbed April 2026 for the protocol carryover).
->
-> **Note on the "Protocol Mechanism" column:** the column describes how the protocol — and a conformant reference implementation — addresses each control. Where a cell names a concrete component (e.g., observation substrate, activity log, messaging substrate, session registry), read it as a reference-implementation example of the protocol-level mechanism, not as a mandated substrate.
+> Last updated: February 23, 2026 (substrate-scrubbed April 2026 for the protocol carryover; flagged stale May 2026).
 
 ---
 
