@@ -2,7 +2,7 @@
 
 **Source:** Governance and Implementation Vision V2 (2026-02-23)
 **Revised:** 2026-02-28 (adversarial review incorporated)
-**Standard:** Each premise is a single falsifiable claim. Derived premises name all dependencies. Axioms are starting points not derived from other premises in this document. Empirical premises are marked [EMPIRICAL].
+**Standard:** Each premise is a single claim with stated provenance. Derived premises name their dependencies. Axioms are starting points not derived from other premises in this document: some are empirical (marked [EMPIRICAL]); others are stipulated design objectives whose stipulation is stated in the premise body.
 
 ---
 
@@ -14,7 +14,7 @@
 
 ## Section 1: Cognitive Architecture (P1–P5)
 
-*What makes human and agentic cognition different in kind, not just degree.*
+*What makes human and agentic cognition different — and where each architecture is best applied.*
 
 **P1. [AXIOM]** Human and agentic cognition are best applied at different levels of abstraction. Humans are serial, deep, and finite — strongest at higher levels of abstraction (integration, judgment, value trade-offs). Agents are parallel, sustained, and large-context-but-bounded — strongest at lower levels of abstraction (execution within established constraints). The contrast is partly structural (parallelism, fatigue) and partly degree (context size, throughput); the framework's design rests on placing each architecture where it excels.
 
@@ -26,7 +26,7 @@
 
 **P4. [DERIVED from P2, P3]** Given P2 and P3, governance that requires human attention wherever awareness would suffice spreads attention thin until each sign-off is awareness without attention — the form of oversight preserved, the substance gone.
 
-**P5. [AXIOM]** The framework's design objective is to combine the two cognitive architectures: massive parallel execution capacity (agents) guided by human judgment through shared objectives and accountability (humans). The framework exists to achieve this combination; neither architecture alone does. (This is a stipulated design objective, not an empirical claim — it sets what the framework optimizes for.)
+**P5. [AXIOM]** The framework's design objective is to combine the two cognitive architectures: massive parallel execution capacity (agents) guided by human judgment through shared objectives and accountability (humans). Neither architecture alone achieves this combination; the framework exists to make it operational.
 
 ---
 
@@ -40,7 +40,7 @@
 
 **P8. [AXIOM]** Every agent must have a named human principal. An agent without an accountable owner is not a governed actor.
 
-**P9. [DERIVED from P1, P7, P8]** Given P1 (agents are parallel and tireless but context-limited), P7 (humans command), and P8 (named principal required), agents have execution power but no inherent authority — no objectives of their own, no organizational context, no understanding of their principal's trade-offs. The gap between execution capability and decision authority is larger with agents than with any human worker.
+**P9. [DERIVED from P1, P7, P8]** Given P1 (agents are parallel and sustained but context-bounded), P7 (humans command), and P8 (named principal required), agents have execution power but no inherent authority — no objectives of their own, no organizational context, no understanding of their principal's trade-offs. The gap between execution capability and decision authority is larger with agents than with any human worker.
 
 **P10. [DERIVED from P6, P9]** Given P6 and P9, governance exists to close the authority-execution gap — to ensure that the humans with the right to decide are the ones actually driving what agents do, and that every agent action traces back to an explicit human authorization.
 
@@ -98,7 +98,7 @@
 
 **P28. ⭐ [AXIOM]** All operational agent work happens within an incident. There is no category of operational work exempt from incident governance — no routine track, no lightweight exception, no standing authorization for agents to act outside incident structure. The incident is the universal unit of governance.
 
-**P29. [DERIVED from P1, P28]** Given P1 (agents are tireless and context-limited) and P28, agents do not self-limit: a tireless agent cannot moderate its own action volume based on fatigue, and a context-limited agent cannot recognize when routine actions are compounding into governance problems. Universal incident scope is therefore necessary, not bureaucratic.
+**P29. [DERIVED from P1, P28]** Given P1 (agents are sustained and context-bounded) and P28, agents do not self-limit: a sustained agent cannot moderate its own action volume based on fatigue, and a context-bounded agent cannot recognize when routine actions are compounding into governance problems. Universal incident scope is therefore necessary, not bureaucratic.
 
 **P30. [DERIVED from P28, P29]** Given P28 and P29, governance that exempts routine work creates an escape hatch that agents will fill. The correct design variable is not presence or absence of governance but weight: governance is proportional to risk and reversibility, and present in all work.
 
@@ -116,7 +116,7 @@
 
 **P34. [AXIOM]** Every message is persisted before delivery. The persistent record is the authoritative history of what was communicated — not delivery confirmation, not acknowledgment, not the recipient's local state.
 
-**P35. [DERIVED from P1, P9]** Given P1 (agents are context-limited) and P9 (agents have no inherent authority), agents cannot reliably infer command authority from sender, direction, or channel — they lack the organizational context to interpret implicit authority signals. A message that carries command weight must therefore be identifiable by its declared type: a directive is a directive because it is typed as one.
+**P35. [DERIVED from P1, P9]** Given P1 (agents are context-bounded) and P9 (agents have no inherent authority), agents cannot reliably infer command authority from sender, direction, or channel — they lack the organizational context to interpret implicit authority signals. A message that carries command weight must therefore be identifiable by its declared type: a directive is a directive because it is typed as one.
 
 **P36. [DERIVED from P34]** Given P34 (persistent record), agents communicate through persistent mailboxes, not synchronous request-response. The persistent record makes blocking unnecessary: an agent does not need the recipient to be present to send a message, and does not need to wait for acknowledgment to confirm delivery.
 

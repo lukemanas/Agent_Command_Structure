@@ -158,7 +158,7 @@ The SOW is archived to `history/` after the scoping decision.
 
 **OAP — Operational Action Plan:**
 
-The contract for a single OP. Defines what will be done, by whom, in how long. Scope can shrink mid-OP but never expand.
+The contract for a single OP. Defines what will be done and by whom. Scope can shrink mid-OP but never expand.
 ```
 period_number     int       required
 duration_estimate string    optional (planning estimate, not protocol-enforced — e.g., "4h", "2d")
