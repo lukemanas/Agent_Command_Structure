@@ -163,7 +163,6 @@ Verified end-to-end: in auto mode, one `run cos-1` after `init` + `approve-oap` 
 - Cryptographic identity (env var binding)
 - Multi-OP project plans (single OP only)
 - Supervisor layer (CoS + workers only)
-- Timer enforcement (periods end on demob)
 - Real Claude/Codex/Gemini agent processes (CLI invocations stand in)
 
 These are all implementation upgrades on a working protocol. The point of this build is that the *protocol mechanics* — schema gates, checkin gate, role-gated transitions, verified-before-close, scope invariants, audit trail — are visibly enforced.

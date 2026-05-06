@@ -100,7 +100,7 @@ The orchestrator is the only entity that *executes* state transitions. Roles aut
 | Issue actor credentials | — | — | — | — | — | ✓ (post-checkin) |
 | Destroy any sandbox | ✓ | — | — | — | — | executes |
 
-At small scale, a single agent holds multiple roles and the matrix collapses accordingly — but the orchestrator's enforcement role does not.
+At small scale, a single agent holds multiple roles and the matrix collapses accordingly — but the orchestrator's enforcement role does not. Per premise P32 (unmanned functions roll up), one agent may simultaneously occupy the planning, CoS, supervisor, and worker rows; the orchestrator's role-binding check still runs on each row independently, so every privileged action is validated against the matrix even when the same agent appears on both sides of the authorization.
 
 ---
 

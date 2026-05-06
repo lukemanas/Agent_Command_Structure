@@ -16,17 +16,17 @@
 
 *What makes human and agentic cognition different in kind, not just degree.*
 
-**P1. [AXIOM]** Human cognition is serial, deep, and finite. Agentic cognition is parallel, tireless, scalable, and context-limited. These are structural differences, not differences of degree.
+**P1. [AXIOM]** Human and agentic cognition are best applied at different levels of abstraction. Humans are serial, deep, and finite — strongest at higher levels of abstraction (integration, judgment, value trade-offs). Agents are parallel, sustained, and large-context-but-bounded — strongest at lower levels of abstraction (execution within established constraints). The contrast is partly structural (parallelism, fatigue) and partly degree (context size, throughput); the framework's design rests on placing each architecture where it excels.
 
 *Note: 'Authoritative' is a governance property, not a cognitive one; introduced at P12.*
 
 **P2. [EMPIRICAL]** Human attention is genuinely serial: two deep decision processes cannot run in parallel, and cognitive switching between tasks degrades the quality of each. Each unit of attention spent on shallow review is a unit unavailable for deep judgment. This is an empirical constraint on human cognition, not an organizational shortcoming.
 
-**P3. ⭐ [AXIOM]** Attention and awareness are distinct cognitive functions. *Awareness* — knowing what is happening — can be broad, can be delegated, and can be provided by agents through synthesis and reporting. *Attention* — focused, deep engagement with a specific decision — is serial, scarce, and cannot be substituted or parallelized.
+**P3. ⭐ [AXIOM]** Attention and awareness are distinct cognitive functions. *Awareness* — knowing what is happening — can be broad, can be delegated, and can be provided by agents through synthesis and reporting. *Attention* — focused, deep engagement with a specific decision — is serial, scarce, and cannot be substituted or parallelized. Delegated awareness is real awareness only when grounded in observable agent activity (see P50–P54): the human's situational awareness is constituted by the Common Operating Picture built from audit-traceable records, not from agent self-report alone. Awareness reported by opaque agents is trust, not awareness.
 
 **P4. [DERIVED from P2, P3]** Given P2 and P3, governance that requires human attention wherever awareness would suffice spreads attention thin until each sign-off is awareness without attention — the form of oversight preserved, the substance gone.
 
-**P5. [AXIOM]** The organizational value of agent deployment is the combination of both cognitive architectures: massive parallel execution capacity guided by human judgment through shared objectives and accountability. Neither architecture alone achieves this.
+**P5. [AXIOM]** The framework's design objective is to combine the two cognitive architectures: massive parallel execution capacity (agents) guided by human judgment through shared objectives and accountability (humans). The framework exists to achieve this combination; neither architecture alone does. (This is a stipulated design objective, not an empirical claim — it sets what the framework optimizes for.)
 
 ---
 
@@ -78,7 +78,7 @@
 
 *How strategic intent becomes governed agent work, with enforced review cycles.*
 
-**P22. ⭐ [AXIOM]** Strategic decisions — what objective to pursue, what constraints apply, and what trade-offs are acceptable — belong to humans. Tactical decisions — which approach, sequence, and method to use in achieving an established objective within established constraints — belong to agents. This boundary is the central division of authority in the governance framework.
+**P22. ⭐ [AXIOM]** Decision authority follows level of abstraction. Strategic decisions — those at higher levels of abstraction, including what objective to pursue, what constraints apply, and what trade-offs are acceptable — belong to humans. Tactical decisions — those at lower levels of abstraction, including approach, sequence, and method within established constraints — belong to agents. The strategic/tactical boundary is not a fixed line but a level threshold: at any given scope, decisions above the level belong to the human authority for that scope, and decisions below it belong to the agents operating under that authority. This is the central division of authority in the governance framework.
 
 **P23. [DERIVED from P1, P13, P22]** Given P1 (agents are context-limited), P13 (tactical discretion belongs to agents within boundaries), and P22, the strategic/tactical boundary cannot be maintained by agent judgment alone — agents lack the organizational context to know when they are crossing it. The boundary must be enforced structurally.
 
@@ -145,6 +145,8 @@
 ## Section 8: Memory Governance (P44–P49)
 
 *Persistent memory as a governed capability and live attack surface.*
+
+> **Scope note — out of scope for v1.** This section describes the design intent for memory governance. The v1 protocol does not specify memory controls beyond the threat-model row in [`../governance-protocol.md`](../governance-protocol.md); these premises define the future-work direction. Adopters may treat them as design guidance until the controls are formalized.
 
 **P44. [AXIOM]** Persistent memory that extends an agent's autonomous capability across time is a live attack surface. Adversarially crafted inputs can write to memory, persist across operational periods, and execute against a trigger weeks later without further user interaction.
 
