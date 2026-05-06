@@ -6,7 +6,9 @@
 
 ---
 
-**Load-bearing premises** ⭐: P3 (attention ≠ awareness), P15 (delegation flows downward), P ⭐21 (strategic/tactical division), P28 (incident is universal)
+**Load-bearing premises** ⭐: P3 (attention ≠ awareness), P15 (delegation flows downward), P22 (strategic/tactical division), P28 (incident is universal)
+
+**Note on terminology:** the premises use "incident" (NIMS-faithful); the canonical specification ([../governance-protocol.md](../governance-protocol.md)) uses "project" for the same concept. Treat the two as synonyms unless the surrounding text says otherwise.
 
 ---
 
@@ -62,7 +64,7 @@
 
 **P17. [DERIVED from P15, P16]** Given P15 and P16, an agent cannot act where its human has no authority and cannot be granted more than the human holds. Every agent action is bounded first by the human's jurisdictional authority and second by the agent's delegation within it.
 
-**P18. [DERIVED from P10, P15]** Given P10 and P15, every agent action must trace back to an explicit human authorization — through the agent's delegation, through the IAP, through the principal's jurisdiction. A gap anywhere in this chain is a governance failure, not an implementation gap.
+**P18. [DERIVED from P10, P15]** Given P10 and P15, every agent action must trace back to an explicit human authorization — through the agent's delegation, through the OAP, through the principal's jurisdiction. A gap anywhere in this chain is a governance failure, not an implementation gap.
 
 **P19. [AXIOM]** Agents have no rights-bearing relationship with their principals. Delegation is a grant, not a transfer — revocable immediately, for any reason, without process. The human retains authority at all times.
 
@@ -84,7 +86,7 @@
 
 **P25. [DERIVED from P15, P22]** Given P15 and P22, an Operational Action Plan (OAP — the protocol's term for what NIMS calls the IAP) is the authorization document: the IC's formal approval of what agents will do and within what constraints, including pre-authorized exceptions decided in advance with full context before operational pressure applies. No operational agent deploys without an approved OAP.
 
-**P26. [DERIVED from P4, P25]** Given P4 and P25, work executes in bounded operational periods with a configured maximum duration enforced by the system. The maximum duration is the hard guarantee of a mandatory human review cycle; when it expires, the period surfaces for IC review regardless of whether agents have finished. A period without an enforced maximum is a period without a mandatory review cycle — and a period without a mandatory review cycle defeats the governance purpose of operational periods.
+**P26. [DERIVED from P4, P25]** Given P4 and P25, work executes in bounded operational periods. The bound is scope: each period is defined by a fixed set of objectives that cannot expand mid-period. The period ends when all objectives are verified-before-close or when the human terminates it. Scope-immutability — combined with the human's unilateral termination authority — is the hard guarantee of a review cycle: a period with finite, immutable scope cannot run indefinitely, and the human can always terminate. Time-based duration limits are an adopter calibration on top of the scope bound, not a protocol requirement.
 
 **P27. [DERIVED from P19, P26]** Given P19 (delegation is revocable) and P26 (work proceeds in bounded periods), delegation is time-bound: agent authorization does not persist indefinitely. Reauthorization is required at intervals aligned to the period structure; open-ended delegation that survives period boundaries without explicit renewal is not governed.
 
@@ -148,7 +150,7 @@
 
 **P45. [DERIVED from P17, P44]** Given P17 (agents bounded by delegation) and P44, persistent memory is subject to the same governance principles as any other capability: it must be authorized, scoped to the agent's delegation, auditable, and revocable.
 
-**P46. [DERIVED from P26, P45]** Given P26 (work proceeds in bounded periods) and P45, agent memory is scoped to the current period by default. Memory that persists beyond the period boundary bypasses the review checkpoint that periods are designed to enforce. Cross-period retention requires explicit IC authorization declared in the IAP; cross-incident retention requires IC authorization from both incidents.
+**P46. [DERIVED from P26, P45]** Given P26 (work proceeds in bounded periods) and P45, agent memory is scoped to the current period by default. Memory that persists beyond the period boundary bypasses the review checkpoint that periods are designed to enforce. Cross-period retention requires explicit IC authorization declared in the OAP; cross-incident retention requires IC authorization from both incidents.
 
 **P47. [DERIVED from P18, P45]** Given P18 (authorization chain must be complete) and P45, memory writes, reads, and retention decisions must be logged to the audit trail with the same rigor as any other agent action: which agent wrote what, under which delegation, in which period.
 

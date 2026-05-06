@@ -33,7 +33,7 @@ The protocol exists to make agentic execution recoverable when something goes wr
 | Audit-trail gap | Every governance action is recorded; OP fully reconstructable | Hard |
 | Human approval fatigue | Approvals concentrated at semantic boundaries (SOW, OAP, ARR, merge) — not per-tool-call | Soft — by design |
 
-The protocol does not currently address: data poisoning of the project repository between OPs, model collusion when multiple agents share a sandbox, side-channel attacks via timing or resource consumption, or compromised-orchestrator scenarios. These are out of scope for v1.
+The protocol does not currently address: container-escape vulnerabilities (CVE-2024-21626 class) that breach the sandbox boundary, data poisoning of the project repository between OPs, model collusion when multiple agents share a sandbox, side-channel attacks via timing or resource consumption, or compromised-orchestrator scenarios. These are out of scope for v1.
 
 ---
 
@@ -96,7 +96,7 @@ The orchestrator is the only entity that *executes* state transitions. Roles aut
 | Transition: closed | — | — | ✓ | — | — | enforces |
 | Reduce / defer / cancel scope mid-OP | ✓ | — | (relays) | — | — | executes |
 | Add or expand scope mid-OP | ✗ (next OAP only) | ✗ | ✗ | ✗ | ✗ | rejects |
-| Extend timer | ✓ | — | (requests) | — | — | enforces |
+| Terminate period | ✓ | — | (requests) | — | — | enforces |
 | Issue actor credentials | — | — | — | — | — | ✓ (post-checkin) |
 | Destroy any sandbox | ✓ | — | — | — | — | executes |
 
@@ -161,7 +161,7 @@ The SOW is archived to `history/` after the scoping decision.
 The contract for a single OP. Defines what will be done, by whom, in how long. Scope can shrink mid-OP but never expand.
 ```
 period_number     int       required
-duration          string    required (e.g., "4h", "2d")
+duration_estimate string    optional (planning estimate, not protocol-enforced — e.g., "4h", "2d")
 strategy          string    optional
 context           []Context optional
   type            string    e.g., "codebase", "doc", "url"
@@ -217,7 +217,7 @@ Project-scoped situational-awareness layer spanning Planning, OP, and Demobiliza
 ### Architecture
 
 - **Objective tracker** = project-management state. OAP approval creates one record per objective. CoS and supervisors manage through the tracker (updates, comments, labels, reassignment). Implementations may use any system supporting per-record state, comments, labels, and assignment.
-- **Coordination store** = infrastructure state. Period state machine (phase, timer), agent registry (keys, profiles, checkin status), audit trail.
+- **Coordination store** = infrastructure state. Period state machine (phase), agent registry (keys, profiles, checkin status), audit trail.
 - **COP query** = computed view. Reads tracker + coordination store, returns role-filtered output (worker sees own assignments and immediate blockers; supervisor sees the team; CoS sees everything). No persistent COP document.
 
 ### Checkin gate
@@ -246,7 +246,7 @@ Agents do not poll continuously — context bloat would distract from execution.
 
 ### Update flow
 
-The orchestrator writes mechanical state (objective status from the tracker, timer, registry events) deterministically. CoS and supervisors write management context (priorities, notes, reassignments, judgment-required blockers) through tracker record updates. The COP query merges both at read time.
+The orchestrator writes mechanical state (objective status from the tracker, registry events) deterministically. CoS and supervisors write management context (priorities, notes, reassignments, judgment-required blockers) through tracker record updates. The COP query merges both at read time.
 
 ---
 
@@ -261,7 +261,7 @@ The framework scales with the OAP — same invariants whether one agent wears al
 | 1 | Checkin gate before any work | hard | orchestrator validates fields against COP |
 | 2 | Project isolation | hard | sandbox boundary; no host or cross-project access |
 | 3 | Record transitions are role-gated | hard | orchestrator checks caller's role |
-| 4 | Timer extensions require a human | hard | only human-authenticated command extends |
+| 4 | Period termination triggered by all-objectives-verified or human command | hard | orchestrator gates the exit condition |
 | 5 | Agents never touch main | hard | branch protection |
 | 6 | Chain-of-command messaging | hard | network ACL enforcement |
 | 7 | Verified-before-close on every objective | soft | supervisor/CoS attests; human reviews at demob |
@@ -285,7 +285,7 @@ MOBILIZE → EXECUTE → [Demobilization]
 ```
 
 - **MOBILIZE.** OAP approved; agents spawning and checking in. Supervisors (or the single agent) write tests for code objectives and confirm red. Entry: OAP approval.
-- **EXECUTE.** Work happening. Entry: CoS signals ready. Exit: all objectives verified-before-close, or timer expiry. Either exit transitions to Demobilization.
+- **EXECUTE.** Work happening. Entry: CoS signals ready. Exit: all objectives verified-before-close, or human termination. Either exit transitions to Demobilization.
 
 ### Spawn at scale
 
@@ -297,7 +297,7 @@ Verified-before-close. Code objectives use TDD: supervisor writes the tests, wor
 
 ### Execution flow
 
-Workers execute against records and report milestones and blockers up. Supervisors validate (run tests for code, check criteria for non-code), comment, and either transition the record or send the worker back. Supervisors roll up to the CoS, who manages the operation, escalations, and record updates. The orchestrator tracks the timer and notifies the CoS as expiry approaches.
+Workers execute against records and report milestones and blockers up. Supervisors validate (run tests for code, check criteria for non-code), comment, and either transition the record or send the worker back. Supervisors roll up to the CoS, who manages the operation, escalations, and record updates.
 
 ### Record lifecycle (role-gated)
 
@@ -312,13 +312,15 @@ At small scale the single agent manages its own transitions and the human review
 
 When a supervisor moves a record to `pending-review`, the CoS reads the verification evidence and judges whether the verification actually covers the criteria, whether anything is missing (edge cases, integration points), and whether this objective's work coheres with the others. Weak or incomplete → reopen with feedback. Satisfactory → close.
 
-### Timer and extensions
+### Period termination
 
-The CoS monitors time. If work won't finish, the CoS estimates an extension and requests it from the human in natural language — what's done, what's left, how much, why. The human extends with a single command; the command is the approval. Without an extension, expiry triggers a CoS-led wind-down: agents wrap up, incomplete work is documented in the ARR, the OP transitions to Demobilization. CoS failing to anticipate timer expiry is a performance signal.
+The bound on a period is scope, not time. A period ends when all objectives are verified-before-close or when the human terminates it. The CoS monitors progress against scope and surfaces blockers; if work cannot finish — due to scope misjudgment, missing context, or external blockers — the CoS escalates to the human in natural language with what's done, what's left, and why. The human either authorizes termination (incomplete objectives are documented in the ARR; the OP transitions to Demobilization) or pauses for replanning. CoS failing to recognize a stalled period is a performance signal.
+
+A `duration_estimate` on the OAP is a planning aid for operators, not a protocol-enforced timer; adopters who want a hard wall-clock cap can implement one as an extension to the protocol.
 
 ### Scope changes mid-OP
 
-Scope can shrink, never grow. The human can remove, deprioritize, or cancel objectives at any time and the CoS adjusts. Adding or changing objectives requires a new OAP through the planning cycle — preventing scope creep from undermining the timer and review structure.
+Scope can shrink, never grow. The human can remove, deprioritize, or cancel objectives at any time and the CoS adjusts. Adding or changing objectives requires a new OAP through the planning cycle — preventing scope creep from undermining the review structure.
 
 ### Planning agent during the OP
 
@@ -391,7 +393,7 @@ Required: `period_number`, `status`, `objectives_outcome`, `human_decision`. Aut
 
 ## Open Questions
 
-- **Trigger semantics.** All-closed and timer-expiry both transition automatically to Demobilization; human-command is the override. Specify whether the CoS confirms or the orchestrator transitions unilaterally.
+- **Trigger semantics.** All-objectives-verified transitions automatically to Demobilization; human-command is the override and the only other path out of EXECUTE. Specify whether the CoS confirms or the orchestrator transitions unilaterally.
 - **Performance measurement.** The ARR carries per-agent signals; the protocol does not yet specify how those signals affect future profile assignment, capability scope, or registry status.
 - **Project-level demobilization.** Distinct from OP-level demobilization, not yet differentiated in the protocol.
 - **Skill supply chain.** Currently "trust the registry." Signing, verification, and version pinning are open.
